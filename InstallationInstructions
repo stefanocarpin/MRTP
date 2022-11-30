@@ -1,1 +1,7 @@
 The following instructions are provided to setup the environment to execute the examples provided in the textbook and to solve the assignments given in the CSE180 class ("Introduction to Robotics") offered at UC Merced.
+
+It is assumed you have Ubuntu 20.04 installed.
+
+1- Install ROS2 foxy: follow instructions on https://docs.ros.org/en/foxy/Installation.html  for Desktop Install
+2- Install Gazebo 11: follow instuctions on https://classic.gazebosim.org/download
+3- Install additional ROS packages: run the following command sudo apt install ros-foxy-*
