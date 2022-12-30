@@ -4,7 +4,7 @@
   <name>talklisten</name>
   <version>0.0.1</version>
   <description>Talker/Listener nodes</description>
-  <maintainer "scarpin@ucmerced.edu">Stefano Carpin</maintainer>
+  <maintainer email="scarpin@ucmerced.edu">Stefano Carpin</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
