@@ -1,13 +1,9 @@
 <launch>
-  <node
-      pkg="multipletopics"
-      exec="multipublish"
-      name="multipublish"
-      launch-prefix="gnome-terminal --"
-  />
-  <node
-      pkg="multipletopics"
-      exec="multisub"
-      name="multisub"
-  />
+  <node pkg="multipletopics"
+	exec="multipublish"
+	name="multipublish"
+	launch-prefix="gnome-terminal --"  />
+  <node pkg="multipletopics"
+	exec="multisub"
+	name="multisub"/>
 </launch>
