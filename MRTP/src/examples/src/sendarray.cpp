@@ -11,7 +11,8 @@ int main(int argc,char **argv) {
     rclcpp::Rate rate(1);
 
     nodeh = rclcpp::Node::make_shared("sendarray");
-    auto pubA = nodeh->create_publisher<std_msgs::msg::Int32MultiArray>("arrayint",10);
+    auto pubA = nodeh->create_publisher<std_msgs::msg::Int32MultiArray>
+      ("arrayint",10);
     
     int value = 0;
     std_msgs::msg::Int32MultiArray toSend;
