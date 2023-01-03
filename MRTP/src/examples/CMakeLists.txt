@@ -19,21 +19,30 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 add_executable(sendarray src/sendarray.cpp)
 add_executable(subarray src/subarray.cpp)
 add_executable(sendmatrix src/sendmatrix.cpp)
 add_executable(submatrix src/submatrix.cpp)
+add_executable(pubsub src/pubsub.cpp)
+add_executable(pubscan src/pubscan.cpp)
+
+
 ament_target_dependencies(sendarray rclcpp std_msgs)
 ament_target_dependencies(subarray rclcpp std_msgs)
 ament_target_dependencies(sendmatrix rclcpp std_msgs)
 ament_target_dependencies(submatrix rclcpp std_msgs)
+ament_target_dependencies(pubsub rclcpp std_msgs sensor_msgs)
+ament_target_dependencies(pubscan rclcpp sensor_msgs)
 
 
 install(TARGETS sendarray DESTINATION lib/${PROJECT_NAME})
 install(TARGETS subarray DESTINATION lib/${PROJECT_NAME})
 install(TARGETS sendmatrix DESTINATION lib/${PROJECT_NAME})
 install(TARGETS submatrix DESTINATION lib/${PROJECT_NAME})
+install(TARGETS pubsub DESTINATION lib/${PROJECT_NAME})
+install(TARGETS pubscan DESTINATION lib/${PROJECT_NAME})
 
 
 if(BUILD_TESTING)
