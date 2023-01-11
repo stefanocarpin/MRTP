@@ -27,7 +27,7 @@ int main(int argc,char **argv) {
   geometry_msgs::msg::Twist msg;
   init = false;
 
-  bool spin = false;
+  bool rotate = false;
   float start_x = x;
   float start_y = y;
   double DIRS[] = {0,M_PI/2,-M_PI,-M_PI/2};
@@ -38,7 +38,7 @@ int main(int argc,char **argv) {
   
   while (rclcpp::ok()) {
       rclcpp::spin_some(nodeh);
-      if (spin) {
+      if (rotate) {
 	if ( ( ( direction == 0  ) && ( theta < DIRS[0] ) ) ||
 	     ( ( direction == 1  ) && ( theta < DIRS[1] ) ) ||
 	     ( ( direction == 2  ) && ( theta  >0 ) ) ||
@@ -47,7 +47,7 @@ int main(int argc,char **argv) {
 	  }
 	else {
 	  msg.linear.x = 0; msg.angular.z = 0;
-	  spin = false;
+	  rotate = false;
 	  start_x = x; start_y = y;
 	}
       }
@@ -56,7 +56,7 @@ int main(int argc,char **argv) {
 	      msg.linear.x = 0.5; msg.angular.z = 0; 
 	  }
 	  else {
-	      spin = true;
+	      rotate = true;
 	      msg.linear.x = 0; msg.angular.z = 0;
 	      ++direction %= 4;
 	  }
