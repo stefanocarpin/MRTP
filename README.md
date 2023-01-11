@@ -5,4 +5,4 @@ See https://github.com/stefanocarpin/MRTP/wiki/Installation-Intructions for inst
 
 To build the code examples, download or clone the repository, move to the folder MRTP/MRTP, and run
 
-     colcon build.
+     colcon build
