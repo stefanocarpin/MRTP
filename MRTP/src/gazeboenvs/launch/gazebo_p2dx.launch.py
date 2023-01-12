@@ -31,18 +31,13 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     
     pkg_dir = get_package_share_directory('gazeboenvs')
-    os.environ["GAZEBO_MODEL_PATH"] = os.path.join(pkg_dir, 'models')
     world = os.path.join(pkg_dir, 'worlds', 'empty.world')
-
     sdf_path = os.path.join(pkg_dir, 'models', 'pioneer2dx', 'model.sdf')
 
-    
-    #GAZEBO_MODEL_PATH has to be correctly set for Gazebo to be able to find the model
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-entity', 'demo', '-file', sdf_path],
                         output='screen')
   
-
     return LaunchDescription([
          ExecuteProcess(
             cmd=['gazebo', '--verbose', world, '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so'],
