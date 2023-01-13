@@ -33,6 +33,7 @@ add_executable(pubscan src/pubscan.cpp)
 add_executable(drawsquare src/drawsquare.cpp)
 add_executable(drawsquarefb src/drawsquarefb.cpp)
 add_executable(geom src/geom.cpp)
+add_executable(republishpose src/republishpose.cpp)
 
 
 ament_target_dependencies(sendarray rclcpp std_msgs)
@@ -44,6 +45,7 @@ ament_target_dependencies(pubscan rclcpp sensor_msgs)
 ament_target_dependencies(drawsquare rclcpp geometry_msgs)
 ament_target_dependencies(drawsquarefb rclcpp geometry_msgs turtlesim)
 ament_target_dependencies(geom rclcpp geometry_msgs tf2)
+ament_target_dependencies(republishpose rclcpp geometry_msgs tf2 turtlesim)
 
 
 install(TARGETS sendarray DESTINATION lib/${PROJECT_NAME})
@@ -55,6 +57,7 @@ install(TARGETS pubscan DESTINATION lib/${PROJECT_NAME})
 install(TARGETS drawsquare DESTINATION lib/${PROJECT_NAME})
 install(TARGETS drawsquarefb DESTINATION lib/${PROJECT_NAME})
 install(TARGETS geom DESTINATION lib/${PROJECT_NAME})
+install(TARGETS republishpose DESTINATION lib/${PROJECT_NAME})
 
 
 if(BUILD_TESTING)
