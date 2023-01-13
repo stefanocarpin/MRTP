@@ -22,6 +22,7 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(turtlesim REQUIRED)
+find_package(tf2 REQUIRED)
 
 add_executable(sendarray src/sendarray.cpp)
 add_executable(subarray src/subarray.cpp)
@@ -31,6 +32,7 @@ add_executable(pubsub src/pubsub.cpp)
 add_executable(pubscan src/pubscan.cpp)
 add_executable(drawsquare src/drawsquare.cpp)
 add_executable(drawsquarefb src/drawsquarefb.cpp)
+add_executable(geom src/geom.cpp)
 
 
 ament_target_dependencies(sendarray rclcpp std_msgs)
@@ -41,6 +43,7 @@ ament_target_dependencies(pubsub rclcpp std_msgs sensor_msgs)
 ament_target_dependencies(pubscan rclcpp sensor_msgs)
 ament_target_dependencies(drawsquare rclcpp geometry_msgs)
 ament_target_dependencies(drawsquarefb rclcpp geometry_msgs turtlesim)
+ament_target_dependencies(geom rclcpp geometry_msgs tf2)
 
 
 install(TARGETS sendarray DESTINATION lib/${PROJECT_NAME})
@@ -51,6 +54,7 @@ install(TARGETS pubsub DESTINATION lib/${PROJECT_NAME})
 install(TARGETS pubscan DESTINATION lib/${PROJECT_NAME})
 install(TARGETS drawsquare DESTINATION lib/${PROJECT_NAME})
 install(TARGETS drawsquarefb DESTINATION lib/${PROJECT_NAME})
+install(TARGETS geom DESTINATION lib/${PROJECT_NAME})
 
 
 if(BUILD_TESTING)
