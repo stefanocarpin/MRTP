@@ -3,7 +3,7 @@ This repository contains material related to the textbook "Mobile Robotics Theor
 
 See https://github.com/stefanocarpin/MRTP/wiki/Installation-Intructions for instructions on what to install to run the examples presented in the textbook.
 
-To build the code examples, clone the repository, 
+To build the code examples, clone the repository 
 
     git clone https://github.com/stefanocarpin/MRTP
 
