@@ -11,7 +11,7 @@ move to the folder MRTP/MRTP, and run
 
      colcon build
 
-Important: to run the examples using Gazebo, you need to set the environment variable GAZEBO_MODEL_PATH. Assuming you cloned the repository in your home, you should set it as follows:
+*Important*: to run the examples using Gazebo, you need to set the environment variable GAZEBO_MODEL_PATH. Assuming you cloned the repository in your home, you should set it as follows:
 
      export GAZEBO_MODEL_PATH=~/MRTP/MRTP/src/gazeboenvs/models:$GAZEBO_MODEL_PATH
      
