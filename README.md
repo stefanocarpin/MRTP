@@ -7,6 +7,6 @@ To build the code examples, download or clone the repository, move to the folder
 
      colcon build
 
-Important: to run the examples using Gazebo, you need to set the environment variable GAZEBO_MODEL_PATH. Assuming you downloaded the files in your home, you should set
+Important: to run the examples using Gazebo, you need to set the environment variable GAZEBO_MODEL_PATH. Assuming you downloaded or cloned the repository in your home, you should set
 
      export GAZEBO_MODEL_PATH=~/MRTP/MRTP/src/gazeboenvs/models:$GAZEBO_MODEL_PATH
