@@ -16,6 +16,7 @@ setup(
         (os.path.join('share', package_name,'worlds/'), glob('./worlds/*')),
         (os.path.join('share', package_name,'models/pioneer2dx/'), glob('./models/pioneer2dx/*')),
         (os.path.join('share', package_name,'models/pioneer3at/'), glob('./models/pioneer3at/*')),
+        (os.path.join('share', package_name,'models/husky/'), glob('./models/husky/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
