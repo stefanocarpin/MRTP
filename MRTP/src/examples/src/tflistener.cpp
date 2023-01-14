@@ -31,7 +31,7 @@ int main(int argc, char** argv){
   while (rclcpp::ok()){
 
     try{
-      transformStamped = buffer.lookupTransform("odom_husky", "base_link",
+      transformStamped = buffer.lookupTransform("odom", "base_link",
                                rclcpp::Time(0));
     }
     catch (tf2::TransformException &ex) {
