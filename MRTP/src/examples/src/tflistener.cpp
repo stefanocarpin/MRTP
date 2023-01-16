@@ -27,12 +27,14 @@ int main(int argc, char** argv){
   tf2_ros::Buffer buffer(nodeh->get_clock());
   tf2_ros::TransformListener listener(buffer);
   geometry_msgs::msg::TransformStamped transformStamped;
+
+  rclcpp::Time pastLookup = nodeh->now() - rclcpp::Duration(3);
   
   while (rclcpp::ok()){
 
     try{
       transformStamped = buffer.lookupTransform("odom", "base_link",
-                               rclcpp::Time(0));
+						tf2::TimePointZero);
     }
     catch (tf2::TransformException &ex) {
       RCLCPP_WARN(nodeh->get_logger(),"%s",ex.what());
