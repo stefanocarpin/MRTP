@@ -17,6 +17,8 @@ setup(
         (os.path.join('share', package_name,'models/pioneer2dx/'), glob('./models/pioneer2dx/*')),
         (os.path.join('share', package_name,'models/pioneer3at/'), glob('./models/pioneer3at/*')),
         (os.path.join('share', package_name,'models/husky/'), glob('./models/husky/*')),
+        (os.path.join('share', package_name,'models/sick_lms111/'), glob('./models/sick_lms111/model*')),
+        (os.path.join('share', package_name,'models/sick_lms111/meshes'), glob('./models/sick_lms111/meshes/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
