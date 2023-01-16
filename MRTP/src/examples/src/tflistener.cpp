@@ -28,13 +28,12 @@ int main(int argc, char** argv){
   tf2_ros::TransformListener listener(buffer);
   geometry_msgs::msg::TransformStamped transformStamped;
 
-  rclcpp::Time pastLookup = nodeh->now() - rclcpp::Duration(3);
-  
   while (rclcpp::ok()){
 
     try{
-      transformStamped = buffer.lookupTransform("odom", "base_link",
-						tf2::TimePointZero);
+      transformStamped = buffer.lookupTransform(
+		 "odom", "base_link", tf2::TimePointZero);
+					      
     }
     catch (tf2::TransformException &ex) {
       RCLCPP_WARN(nodeh->get_logger(),"%s",ex.what());
@@ -46,7 +45,6 @@ int main(int argc, char** argv){
 		transformStamped.transform.translation.x,
 		transformStamped.transform.translation.y,
 		transformStamped.transform.translation.z);
-    
   }
   return 0;
 }
