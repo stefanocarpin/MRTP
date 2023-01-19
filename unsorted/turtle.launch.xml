@@ -1,0 +1,13 @@
+<launch>
+  <node
+    pkg="turtlesim"
+    exec="turtlesim_node"
+    name="turtlesim"
+  />
+  <node
+    pkg="turtlesim"
+    exec="turtle_teleop_key"
+    name="teleop_key"
+    launch-prefix="gnome-terminal --"
+  />
+</launch>
