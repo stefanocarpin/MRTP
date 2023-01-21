@@ -6,7 +6,7 @@
 	launch-prefix="gnome-terminal --"  />
   <node pkg="talklisten"
 	exec="listener"
-	name="listenernew">
+	name="listener">
     <remap from="/message" to="/t1/message"  />
   </node>
 </launch>
