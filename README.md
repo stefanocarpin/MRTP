@@ -10,6 +10,8 @@ To build the code examples, clone the repository,
 move to the folder MRTP/MRTP, and run
 
      colcon build
+     
+Important: as pointed out in the documentation, to use ROS you must source the setup. See also https://docs.ros.org/en/foxy/Installation/Alternatives/Ubuntu-Development-Setup.html#environment-setup
 
 
      
