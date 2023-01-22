@@ -11,7 +11,7 @@ move to the folder MRTP/MRTP, and run
 
      colcon build
      
-Important: as pointed out in the documentation, to use ROS you must first source the setup. See also https://docs.ros.org/en/foxy/Installation/Alternatives/Ubuntu-Install-Binary.html#source-the-setup-script
+Important: as pointed out in the documentation, to use ROS you must first source the setup. See also https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html#sourcing-the-setup-script
 
 
      
