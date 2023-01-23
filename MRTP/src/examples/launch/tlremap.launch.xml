@@ -1,7 +1,7 @@
 <launch>
   <node pkg="talklisten"
 	exec="talker"
-	name="talker"
+	name="newtalker"
 	namespace = "/t1"
 	launch-prefix="gnome-terminal --"  />
   <node pkg="talklisten"

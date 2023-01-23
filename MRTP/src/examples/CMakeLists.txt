@@ -37,6 +37,7 @@ add_executable(geom src/geom.cpp)
 add_executable(republishpose src/republishpose.cpp)
 add_executable(tflistener src/tflistener.cpp)
 add_executable(tfbroadcaster src/tfbroadcaster.cpp)
+add_executable(paramclient src/paramclient.cpp)
 
 
 ament_target_dependencies(sendarray rclcpp std_msgs)
@@ -51,6 +52,7 @@ ament_target_dependencies(geom rclcpp geometry_msgs tf2)
 ament_target_dependencies(republishpose rclcpp geometry_msgs tf2 turtlesim)
 ament_target_dependencies(tflistener rclcpp geometry_msgs tf2_ros)
 ament_target_dependencies(tfbroadcaster rclcpp geometry_msgs tf2_ros)
+ament_target_dependencies(paramclient rclcpp)
 
 
 install(TARGETS sendarray DESTINATION lib/${PROJECT_NAME})
@@ -65,6 +67,7 @@ install(TARGETS geom DESTINATION lib/${PROJECT_NAME})
 install(TARGETS republishpose DESTINATION lib/${PROJECT_NAME})
 install(TARGETS tflistener DESTINATION lib/${PROJECT_NAME})
 install(TARGETS tfbroadcaster DESTINATION lib/${PROJECT_NAME})
+install(TARGETS paramclient DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
