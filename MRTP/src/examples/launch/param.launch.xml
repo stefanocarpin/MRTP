@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="examples"
+	exec="paramclient"
+	name="param">
+    <param name="sensorport" value="/dev/USB0" />
+  </node>
+</launch>
