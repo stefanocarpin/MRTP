@@ -24,7 +24,8 @@ int main(int argc,char **argv) {
   nodeh->declare_parameter<std::string>("sensorport","/dev/tty0");
   std::string port;
   while (rclcpp::ok()) {
-    port = nodeh->get_parameter("sensorport").get_parameter_value().get<std::string>();
+    port = nodeh->get_parameter("sensorport").get_parameter_value().
+                                              get<std::string>();
     RCLCPP_INFO(nodeh->get_logger(), "Parameter value: %s", port.c_str());
     rclcpp::spin_some(nodeh);
   }
