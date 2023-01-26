@@ -18,7 +18,7 @@ limitations under the License.
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <cstdlib>
 
-#define NDATA 181
+#define NDATA 181 // number of readings
 
 int main(int argc,char **argv) {
   
@@ -26,22 +26,25 @@ int main(int argc,char **argv) {
     rclcpp::Node::SharedPtr nodeh;
     rclcpp::Rate rate(1);
 
-    nodeh = rclcpp::Node::make_shared("pubscan");
+    nodeh = rclcpp::Node::make_shared("pubscan"); // create node
+    // create publisher
     auto pubs = nodeh->create_publisher<sensor_msgs::msg::LaserScan>
       ("scan",10);
-    int iteration = 1;
+    int iteration = 1; // just for output purposes
+    // instance of message to be sent
     sensor_msgs::msg::LaserScan toSend;
     // setup data structure to send
     toSend.ranges.resize(NDATA);
     // other fields in toSend should be initialized, too...
     
     while (rclcpp::ok()) {
-	for (int i = 0; i < NDATA ; i++)
-	  toSend.ranges[i] = rand()/RAND_MAX;
-	RCLCPP_INFO(nodeh->get_logger(),"Publishing scan #%d",iteration++);
-	pubs->publish(toSend);
-	rclcpp::spin_some(nodeh);
-	rate.sleep();
+      // generate random distances 
+      for (int i = 0; i < NDATA ; i++)
+	toSend.ranges[i] = rand()/RAND_MAX;
+      RCLCPP_INFO(nodeh->get_logger(),"Publishing scan #%d",iteration++);
+      pubs->publish(toSend); // publish
+      rclcpp::spin_some(nodeh); 
+      rate.sleep();
     }
 
 }

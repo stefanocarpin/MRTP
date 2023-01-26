@@ -27,7 +27,7 @@ int main(int argc,char **argv) {
   rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr pubi;
   rclcpp::Rate rate(2);
 
-  nodeh = rclcpp::Node::make_shared("multipublish"); // create note
+  nodeh = rclcpp::Node::make_shared("multipublish"); // create node
   // create publisher to topic "strigm" of strings
   pubs = nodeh->create_publisher<std_msgs::msg::String>("stringm",1);
     // create publisher to topic "intm" of integers

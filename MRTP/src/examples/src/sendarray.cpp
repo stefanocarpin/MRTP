@@ -14,39 +14,44 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/int32_multi_array.hpp>
-#include <std_msgs/msg/multi_array_dimension.hpp>
+#include <rclcpp/rclcpp.hpp> // needed for basic functions
+#include <std_msgs/msg/int32_multi_array.hpp> // we send an array of ints
+#include <std_msgs/msg/multi_array_dimension.hpp> // must represent dimensions
 
-#define SIZE 10
+#define SIZE 10 // size of the array we are sending
 
 int main(int argc,char **argv) {
   
     rclcpp::init(argc,argv);
-    rclcpp::Node::SharedPtr nodeh;
+    rclcpp::Node::SharedPtr nodeh; 
     rclcpp::Rate rate(1);
 
-    nodeh = rclcpp::Node::make_shared("sendarray");
+    nodeh = rclcpp::Node::make_shared("sendarray"); // create node
+    // create publisher
     auto pubA = nodeh->create_publisher<std_msgs::msg::Int32MultiArray>
       ("arrayint",10);
     
     int value = 0;
-    std_msgs::msg::Int32MultiArray toSend;
+    std_msgs::msg::Int32MultiArray toSend; // instance of message to send
 
     // setup data structure to send
-    toSend.layout.dim.push_back(std_msgs::msg::MultiArrayDimension());
-    toSend.layout.dim[0].size = SIZE;
-    toSend.layout.dim[0].stride = 1;
-    toSend.layout.dim[0].label = "row";
-    toSend.data.resize(toSend.layout.dim[0].size);
+    // one dimension
+    toSend.layout.dim.push_back(std_msgs::msg::MultiArrayDimension()); 
+    toSend.layout.dim[0].size = SIZE; // first dimension size
+    toSend.layout.dim[0].stride = 1; // 1 because unidimensional
+    toSend.layout.dim[0].label = "row"; // arbitrary label
+    // make space for the serialized array
+    toSend.data.resize(toSend.layout.dim[0].size); 
     
     while (rclcpp::ok()) {
-	for (int i = 0; i < SIZE ; i++)
-	      toSend.data[i] = i+value;
-	pubA->publish(toSend);
-	value++;
-	rclcpp::spin_some(nodeh);
-	rate.sleep();
+      // store some values
+      for (int i = 0; i < SIZE ; i++)
+	toSend.data[i] = i+value;
+      // publish
+      pubA->publish(toSend); 
+      value++;
+      rclcpp::spin_some(nodeh); // spin
+      rate.sleep();
     }
 
 }
