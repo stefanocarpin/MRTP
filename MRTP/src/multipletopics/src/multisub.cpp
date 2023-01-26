@@ -14,32 +14,40 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/int32.hpp>
-#include <std_msgs/msg/string.hpp>
+#include <rclcpp/rclcpp.hpp> // needed for basic functions
+#include <std_msgs/msg/int32.hpp> // to receive integers
+#include <std_msgs/msg/string.hpp> // to receive strings
 
 rclcpp::Node::SharedPtr nodeh;
 
+// callback function called every time a message is received from the
+// topic "stringm"
 void stringCallback(const std_msgs::msg::String::SharedPtr msg) {
-  RCLCPP_INFO(nodeh->get_logger(),"Received: %s",msg->data.c_str());
+  // print received string to the screen
+  RCLCPP_INFO(nodeh->get_logger(),"Received string: %s",msg->data.c_str());
 }
 
+// callback function called every time a message is received from the
+// topic "intm"
 void intCallback(const std_msgs::msg::Int32::SharedPtr msg) {
-  RCLCPP_INFO(nodeh->get_logger(),"Received: %d",msg->data);
+  // print received integer to the screen
+  RCLCPP_INFO(nodeh->get_logger(),"Received integer: %d",msg->data);
 }
 
 
 int main(int argc,char **argv) {
 
-  rclcpp::init(argc,argv);
+  rclcpp::init(argc,argv); // initialize ROS subsystem
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subs;
   rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr subi;
-  nodeh = rclcpp::Node::make_shared("multisub");
+  nodeh = rclcpp::Node::make_shared("multisub"); // create node instance
+  // subscribe to topic "stringm" an register the callback function
   subs = nodeh->create_subscription<std_msgs::msg::String>
                                          ("stringm",10,&stringCallback);
+    // subscribe to topic "intm" an register the callback function
   subi = nodeh->create_subscription<std_msgs::msg::Int32>
                                          ("intm",10,&intCallback);
-  rclcpp::spin(nodeh);
+  rclcpp::spin(nodeh); // wait for messages and process them
  
   rclcpp::shutdown();
   return 0;

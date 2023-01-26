@@ -14,37 +14,39 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/int32.hpp>
-#include <std_msgs/msg/string.hpp>
+#include <rclcpp/rclcpp.hpp> // needed for basic functions
+#include <std_msgs/msg/int32.hpp> // to publish integers
+#include <std_msgs/msg/string.hpp> // to publish strings
 
 int main(int argc,char **argv) {
   
-  rclcpp::init(argc,argv);
+  rclcpp::init(argc,argv); // initialize the ROS subsystem
   
   rclcpp::Node::SharedPtr nodeh;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pubs;
   rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr pubi;
   rclcpp::Rate rate(2);
 
-  nodeh = rclcpp::Node::make_shared("multipublish");
+  nodeh = rclcpp::Node::make_shared("multipublish"); // create note
+  // create publisher to topic "strigm" of strings
   pubs = nodeh->create_publisher<std_msgs::msg::String>("stringm",1);
+    // create publisher to topic "intm" of integers
   pubi = nodeh->create_publisher<std_msgs::msg::Int32>("intm",1);
   
   int value=0;
-  std_msgs::msg::Int32 intToSend;
-  std_msgs::msg::String stringToSend;
-  stringToSend.data = "CSE180-Robotics";
+  std_msgs::msg::Int32 intToSend; // integer message to send
+  std_msgs::msg::String stringToSend; // string message to send
+  stringToSend.data = "CSE180-Robotics"; // constant string to send
   
   while (rclcpp::ok()) {
-    intToSend.data = value++;
-    pubi->publish(intToSend);
-    pubs->publish(stringToSend);
-    rclcpp::spin_some(nodeh);
+    intToSend.data = value++; // update message to send
+    pubi->publish(intToSend); // publish the integer message
+    pubs->publish(stringToSend); // publish the string message
+    rclcpp::spin_some(nodeh); // handle pending messages
     RCLCPP_INFO(nodeh->get_logger(),"Completed iteration  #%d",value);    	
-    rate.sleep();
+    rate.sleep(); // wait
   }
-  rclcpp::shutdown();
+  rclcpp::shutdown(); // unreachable in the current form
   return 0;
 
 }

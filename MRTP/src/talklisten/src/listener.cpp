@@ -31,7 +31,7 @@ int main(int argc,char **argv) {
   rclcpp::init(argc,argv); // initialize ROS subsystem
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub;
   nodeh = rclcpp::Node::make_shared("listener"); // create node instance
-  // subscrive to topic "message" and register the callback function
+  // subscribe to topic "message" and register the callback function
   sub = nodeh->create_subscription<std_msgs::msg::String>
                                              ("message",10,&callback);
   rclcpp::spin(nodeh);  // wait for messages and process them

@@ -26,7 +26,7 @@ int main(int argc,char **argv) {
   rclcpp::Rate rate(1); // create rate object
   
   nodeh = rclcpp::Node::make_shared("talker"); // create node instance
-  // create publisher to topic "message" of for strings
+  // create publisher to topic "message" of strings
   pub = nodeh->create_publisher<std_msgs::msg::String>("message",1);
 
   int counter = 0;
