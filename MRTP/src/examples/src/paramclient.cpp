@@ -21,9 +21,11 @@ int main(int argc,char **argv) {
   rclcpp::init(argc,argv);
   rclcpp::Node::SharedPtr nodeh;
   nodeh = rclcpp::Node::make_shared("paramclient");
+  // declare a parameter of type string called sensorport
   nodeh->declare_parameter<std::string>("sensorport","/dev/tty0");
   std::string port;
   while (rclcpp::ok()) {
+    // retrieve the parameter as a string
     port = nodeh->get_parameter("sensorport").get_parameter_value().
                                               get<std::string>();
     RCLCPP_INFO(nodeh->get_logger(), "Parameter value: %s", port.c_str());
