@@ -26,11 +26,12 @@ void processEvent(const rcl_interfaces::msg::ParameterEvent::SharedPtr msg) {
     if ( msg->changed_parameters.size() > 0 ) { // any parameter changed?
       // scan all changed parameters
       for ( unsigned int i = 0 ; i < msg->changed_parameters.size() ; i++ )
-	if (msg->changed_parameters[i].name == "order"){ // changed parameter order?
-	  if(msg->changed_parameters[i].value.type == // is the new value an integer?
+	if (msg->changed_parameters[i].name == "order"){ // changed order?
+	  if(msg->changed_parameters[i].value.type == // is it an integer?
 	     rcl_interfaces::msg::ParameterType::PARAMETER_INTEGER) {
 	    int order;  // get it
-	    order = nodeh->get_parameter("order").get_parameter_value().get<int>();
+	    order = nodeh->get_parameter("order").get_parameter_value().
+	      get<int>();
 	    // print it
 	    RCLCPP_INFO(nodeh->get_logger(), "Parameter order has changed");
 	    RCLCPP_INFO(nodeh->get_logger(), "New value value: %d", order);
