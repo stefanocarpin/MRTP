@@ -24,6 +24,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(turtlesim REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 
 add_executable(sendarray src/sendarray.cpp)
 add_executable(subarray src/subarray.cpp)
@@ -38,6 +39,7 @@ add_executable(republishpose src/republishpose.cpp)
 add_executable(tflistener src/tflistener.cpp)
 add_executable(tfbroadcaster src/tfbroadcaster.cpp)
 add_executable(paramclient src/paramclient.cpp)
+add_executable(paramevent src/paramevent.cpp)
 
 
 ament_target_dependencies(sendarray rclcpp std_msgs)
@@ -53,6 +55,7 @@ ament_target_dependencies(republishpose rclcpp geometry_msgs tf2 turtlesim)
 ament_target_dependencies(tflistener rclcpp geometry_msgs tf2_ros)
 ament_target_dependencies(tfbroadcaster rclcpp geometry_msgs tf2_ros)
 ament_target_dependencies(paramclient rclcpp)
+ament_target_dependencies(paramevent rclcpp rcl_interfaces)
 
 
 install(TARGETS sendarray DESTINATION lib/${PROJECT_NAME})
@@ -68,6 +71,7 @@ install(TARGETS republishpose DESTINATION lib/${PROJECT_NAME})
 install(TARGETS tflistener DESTINATION lib/${PROJECT_NAME})
 install(TARGETS tfbroadcaster DESTINATION lib/${PROJECT_NAME})
 install(TARGETS paramclient DESTINATION lib/${PROJECT_NAME})
+install(TARGETS paramevent DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
