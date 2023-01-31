@@ -53,8 +53,10 @@ int main(int argc,char **argv) {
     
     // create a request object for the SetCameraInfo service
     auto request = std::make_shared<sensor_msgs::srv::SetCameraInfo::
-                                                               Request>();
-    // set hypothetical region of interest 
+                   				    Request>();
+    // copy existing configuration
+    request->camera_info = buffer;
+    // set hypothetical region of interest
     request->camera_info.roi.x_offset = 10;
     request->camera_info.roi.y_offset = 20;
     request->camera_info.roi.height = 30;
