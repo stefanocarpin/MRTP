@@ -63,7 +63,7 @@ int main(int argc,char **argv) {
     request->camera_info.roi.width = 50;
     request->camera_info.roi.do_rectify = true;
     // send request to server
-    auto response = client->async_send_request(request);
+    auto response = client->sync_send_request(request);
     if (rclcpp::spin_until_future_complete(nodeh, response) ==
 	rclcpp::FutureReturnCode::SUCCESS) {  // waited and got success?
       // print result
