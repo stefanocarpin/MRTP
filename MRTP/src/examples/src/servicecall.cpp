@@ -48,11 +48,12 @@ int main(int argc,char **argv) {
     nodeh->create_client<sensor_msgs::srv::SetCameraInfo>("/set_camera_info");
     
     // wait indefinitely for service to become available
-    while (! client->wait_for_service()) {
-      RCLCPP_INFO(nodeh->get_logger(),"Waiting for service to become available");
-    }
+    while (! client->wait_for_service()) 
+      RCLCPP_INFO(nodeh->get_logger(),"Waiting for service to be available");
+    
     // create a request object for the SetCameraInfo service
-    auto request = std::make_shared<sensor_msgs::srv::SetCameraInfo::Request>();
+    auto request = std::make_shared<sensor_msgs::srv::SetCameraInfo::
+                                                               Request>();
     // set hypothetical region of interest 
     request->camera_info.roi.x_offset = 10;
     request->camera_info.roi.y_offset = 20;
@@ -70,7 +71,8 @@ int main(int argc,char **argv) {
 		  response.get()->status_message.c_str());
     }
     else // Error: 
-      RCLCPP_ERROR(nodeh->get_logger(), "Error calling service set_camera_info");
+      RCLCPP_ERROR(nodeh->get_logger(),
+		    "Error calling service set_camera_info");
         
     rclcpp::shutdown();
     return 0;
