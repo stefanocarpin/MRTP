@@ -32,12 +32,10 @@ int main(int argc,char **argv) {
     msg.linear.x = 1;    
     msg.angular.z = 0;
     pub->publish(msg);
-    rclcpp::spin_some(nodeh);
     rate.sleep();
     msg.linear.x = 0;
     msg.angular.z = M_PI/2; 
     pub->publish(msg);
-    rclcpp::spin_some(nodeh);
     rate.sleep(); 
   }
 }

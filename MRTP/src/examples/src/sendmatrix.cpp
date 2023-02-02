@@ -55,7 +55,6 @@ int main(int argc,char **argv) {
       }
       value++;
       pubA->publish(toSend); // publish
-      rclcpp::spin_some(nodeh); // process messages
       rate.sleep();
     }
 }

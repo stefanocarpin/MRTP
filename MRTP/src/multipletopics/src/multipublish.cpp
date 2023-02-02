@@ -42,7 +42,6 @@ int main(int argc,char **argv) {
     intToSend.data = value++; // update message to send
     pubi->publish(intToSend); // publish the integer message
     pubs->publish(stringToSend); // publish the string message
-    rclcpp::spin_some(nodeh); // handle pending messages
     RCLCPP_INFO(nodeh->get_logger(),"Completed iteration  #%d",value);    	
     rate.sleep(); // wait
   }

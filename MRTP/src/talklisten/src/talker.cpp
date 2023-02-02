@@ -36,7 +36,6 @@ int main(int argc,char **argv) {
     // prepare message to send
     stringtosend.data = "Message # " + std::to_string(counter);
     pub->publish(stringtosend); // publish message
-    rclcpp::spin_some(nodeh); // process pending messages
     rate.sleep(); // wait
   } 
   rclcpp::shutdown(); // shutdown ROS

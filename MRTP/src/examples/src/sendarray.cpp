@@ -50,7 +50,6 @@ int main(int argc,char **argv) {
       // publish
       pubA->publish(toSend); 
       value++;
-      rclcpp::spin_some(nodeh); // spin
       rate.sleep();
     }
 

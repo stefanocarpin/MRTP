@@ -43,7 +43,6 @@ int main(int argc,char **argv) {
 	toSend.ranges[i] = rand()/RAND_MAX;
       RCLCPP_INFO(nodeh->get_logger(),"Publishing scan #%d",iteration++);
       pubs->publish(toSend); // publish
-      rclcpp::spin_some(nodeh); 
       rate.sleep();
     }
 
