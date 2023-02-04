@@ -41,6 +41,7 @@ add_executable(tfbroadcaster src/tfbroadcaster.cpp)
 add_executable(paramclient src/paramclient.cpp)
 add_executable(paramevent src/paramevent.cpp)
 add_executable(servicecall src/servicecall.cpp)
+add_executable(listeneroop src/listeneroop.cpp)
 
 
 
@@ -59,6 +60,7 @@ ament_target_dependencies(tfbroadcaster rclcpp geometry_msgs tf2_ros)
 ament_target_dependencies(paramclient rclcpp)
 ament_target_dependencies(paramevent rclcpp rcl_interfaces)
 ament_target_dependencies(servicecall rclcpp sensor_msgs)
+ament_target_dependencies(listeneroop rclcpp std_msgs)
 
 
 
@@ -78,6 +80,7 @@ install(TARGETS tfbroadcaster DESTINATION lib/${PROJECT_NAME})
 install(TARGETS paramclient DESTINATION lib/${PROJECT_NAME})
 install(TARGETS paramevent DESTINATION lib/${PROJECT_NAME})
 install(TARGETS servicecall DESTINATION lib/${PROJECT_NAME})
+install(TARGETS listeneroop DESTINATION lib/${PROJECT_NAME})
 
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
