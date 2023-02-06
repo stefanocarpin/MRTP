@@ -42,6 +42,7 @@ add_executable(paramclient src/paramclient.cpp)
 add_executable(paramevent src/paramevent.cpp)
 add_executable(servicecall src/servicecall.cpp)
 add_executable(listeneroop src/listeneroop.cpp)
+add_executable(talkeroop src/talkeroop.cpp)
 
 
 
@@ -61,6 +62,7 @@ ament_target_dependencies(paramclient rclcpp)
 ament_target_dependencies(paramevent rclcpp rcl_interfaces)
 ament_target_dependencies(servicecall rclcpp sensor_msgs)
 ament_target_dependencies(listeneroop rclcpp std_msgs)
+ament_target_dependencies(talkeroop rclcpp std_msgs)
 
 
 
@@ -81,6 +83,7 @@ install(TARGETS paramclient DESTINATION lib/${PROJECT_NAME})
 install(TARGETS paramevent DESTINATION lib/${PROJECT_NAME})
 install(TARGETS servicecall DESTINATION lib/${PROJECT_NAME})
 install(TARGETS listeneroop DESTINATION lib/${PROJECT_NAME})
+install(TARGETS talkeroop DESTINATION lib/${PROJECT_NAME})
 
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
