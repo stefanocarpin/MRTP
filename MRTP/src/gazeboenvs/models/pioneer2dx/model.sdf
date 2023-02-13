@@ -176,7 +176,7 @@
  <plugin name="skid_steer_drive" filename="libgazebo_ros_diff_drive.so">
 
        <ros>
-          <namespace>/p2at</namespace>
+          <namespace>/p2dx</namespace>
         <!--  <remapping>cmd_vel:=cmd_demo</remapping>
           <remapping>odom:=odom_demo</remapping> -->
         </ros>
