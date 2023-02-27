@@ -25,6 +25,7 @@ find_package(turtlesim REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(rcl_interfaces REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 add_executable(sendarray src/sendarray.cpp)
 add_executable(subarray src/subarray.cpp)
@@ -43,6 +44,7 @@ add_executable(paramevent src/paramevent.cpp)
 add_executable(servicecall src/servicecall.cpp)
 add_executable(listeneroop src/listeneroop.cpp)
 add_executable(talkeroop src/talkeroop.cpp)
+add_executable(convert src/convert.cpp)
 
 
 
@@ -63,6 +65,7 @@ ament_target_dependencies(paramevent rclcpp rcl_interfaces)
 ament_target_dependencies(servicecall rclcpp sensor_msgs)
 ament_target_dependencies(listeneroop rclcpp std_msgs)
 ament_target_dependencies(talkeroop rclcpp std_msgs)
+ament_target_dependencies(convert rclcpp geometry_msgs nav_msgs)
 
 
 
@@ -84,6 +87,7 @@ install(TARGETS paramevent DESTINATION lib/${PROJECT_NAME})
 install(TARGETS servicecall DESTINATION lib/${PROJECT_NAME})
 install(TARGETS listeneroop DESTINATION lib/${PROJECT_NAME})
 install(TARGETS talkeroop DESTINATION lib/${PROJECT_NAME})
+install(TARGETS convert DESTINATION lib/${PROJECT_NAME})
 
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
