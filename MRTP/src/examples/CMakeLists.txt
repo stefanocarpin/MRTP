@@ -45,6 +45,7 @@ add_executable(servicecall src/servicecall.cpp)
 add_executable(listeneroop src/listeneroop.cpp)
 add_executable(talkeroop src/talkeroop.cpp)
 add_executable(convert src/convert.cpp)
+add_executable(talkerooptimer src/talkerooptimer.cpp)
 
 
 
@@ -66,6 +67,7 @@ ament_target_dependencies(servicecall rclcpp sensor_msgs)
 ament_target_dependencies(listeneroop rclcpp std_msgs)
 ament_target_dependencies(talkeroop rclcpp std_msgs)
 ament_target_dependencies(convert rclcpp geometry_msgs nav_msgs)
+ament_target_dependencies(talkerooptimer rclcpp std_msgs)
 
 
 
@@ -88,6 +90,7 @@ install(TARGETS servicecall DESTINATION lib/${PROJECT_NAME})
 install(TARGETS listeneroop DESTINATION lib/${PROJECT_NAME})
 install(TARGETS talkeroop DESTINATION lib/${PROJECT_NAME})
 install(TARGETS convert DESTINATION lib/${PROJECT_NAME})
+install(TARGETS talkerooptimer DESTINATION lib/${PROJECT_NAME})
 
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
