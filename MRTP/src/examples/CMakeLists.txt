@@ -26,6 +26,8 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(rcl_interfaces REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)
 
 add_executable(sendarray src/sendarray.cpp)
 add_executable(subarray src/subarray.cpp)
@@ -46,6 +48,7 @@ add_executable(listeneroop src/listeneroop.cpp)
 add_executable(talkeroop src/talkeroop.cpp)
 add_executable(convert src/convert.cpp)
 add_executable(talkerooptimer src/talkerooptimer.cpp)
+add_executable(actioncall src/actioncall.cpp)
 
 
 
@@ -68,6 +71,8 @@ ament_target_dependencies(listeneroop rclcpp std_msgs)
 ament_target_dependencies(talkeroop rclcpp std_msgs)
 ament_target_dependencies(convert rclcpp geometry_msgs nav_msgs)
 ament_target_dependencies(talkerooptimer rclcpp std_msgs)
+ament_target_dependencies(actioncall rclcpp rclcpp_action nav2_msgs)
+
 
 
 
@@ -92,6 +97,7 @@ install(TARGETS listeneroop DESTINATION lib/${PROJECT_NAME})
 install(TARGETS talkeroop DESTINATION lib/${PROJECT_NAME})
 install(TARGETS convert DESTINATION lib/${PROJECT_NAME})
 install(TARGETS talkerooptimer DESTINATION lib/${PROJECT_NAME})
+install(TARGETS actioncall DESTINATION lib/${PROJECT_NAME})
 
 
 
