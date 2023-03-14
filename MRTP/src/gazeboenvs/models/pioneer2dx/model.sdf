@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <sdf version="1.5">
   <model name="pioneer2dx">
-    <link name="chassis">
+    <link name="base_link">
       <pose>0 0 0.16 0 0 0</pose>
       <inertial>
         <mass>5.67</mass>
@@ -62,6 +62,7 @@
         </material>
       </visual>
     </link>
+    
     <link name="right_wheel">
       <pose>0.1 -.17 0.11 0 1.5707 1.5707</pose>
       <inertial>
@@ -108,6 +109,7 @@
         </material>
       </visual>
     </link>
+    
     <link name="left_wheel">
       <pose>0.1 .17 0.11 0 1.5707 1.5707</pose>
       <inertial>
@@ -154,58 +156,177 @@
         </material>
       </visual>
     </link>
+    
     <joint type="revolute" name="left_wheel_hinge">
       <pose>0 0 -0.03 0 0 0</pose>
       <child>left_wheel</child>
-      <parent>chassis</parent>
+      <parent>base_link</parent>
       <axis>
         <xyz>0 1 0</xyz>
         <use_parent_model_frame>true</use_parent_model_frame>
       </axis>
     </joint>
+    
     <joint type="revolute" name="right_wheel_hinge">
       <pose>0 0 0.03 0 0 0</pose>
       <child>right_wheel</child>
-      <parent>chassis</parent>
+      <parent>base_link</parent>
       <axis>
         <xyz>0 1 0</xyz>
         <use_parent_model_frame>true</use_parent_model_frame>
       </axis>
     </joint>
 
- <plugin name="skid_steer_drive" filename="libgazebo_ros_diff_drive.so">
 
-       <ros>
-          <namespace>/p2dx</namespace>
-        <!--  <remapping>cmd_vel:=cmd_demo</remapping>
-          <remapping>odom:=odom_demo</remapping> -->
-        </ros>
+    <link name="imu_link">
+      <pose>0 0 0 0 0 0</pose>
+      <visual name="visual">
+	<geometry>
+	  <box>
+	    <size>0.01 0.01 0.01</size>
+	  </box>
+	</geometry>
+      </visual>
+      <collision name="collision">
+	<geometry>
+	  <box>
+	    <size>0.01 0.01 0.01</size>
+	  </box>
+	</geometry>
+      </collision>
 
-	<updateRate>100.0</updateRate>
+
+      <sensor name="imu_sensor" type="imu">
+        <always_on>1</always_on>
+        <update_rate>50</update_rate>
+        <imu>
+          <enable_orientation>0</enable_orientation>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.009</stddev>
+                <bias_mean>0.00075</bias_mean>
+                <bias_stddev>0.005</bias_stddev>
+                <dynamic_bias_stddev>0.00002</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>400.0</dynamic_bias_correlation_time>
+                <precision>0.00025</precision>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.009</stddev>
+                <bias_mean>0.00075</bias_mean>
+                <bias_stddev>0.005</bias_stddev>
+                <dynamic_bias_stddev>0.00002</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>400.0</dynamic_bias_correlation_time>
+                <precision>0.00025</precision>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.009</stddev>
+                <bias_mean>0.00075</bias_mean>
+                <bias_stddev>0.005</bias_stddev>
+                <dynamic_bias_stddev>0.00002</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>400.0</dynamic_bias_correlation_time>
+                <precision>0.00025</precision>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.021</stddev>
+                <bias_mean>0.05</bias_mean>
+                <bias_stddev>0.0075</bias_stddev>
+                <dynamic_bias_stddev>0.000375</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>175.0</dynamic_bias_correlation_time>
+                <precision>0.005</precision>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.021</stddev>
+                <bias_mean>0.05</bias_mean>
+                <bias_stddev>0.0075</bias_stddev>
+                <dynamic_bias_stddev>0.000375</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>175.0</dynamic_bias_correlation_time>
+                <precision>0.005</precision>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0</mean>
+                <stddev>0.021</stddev>
+                <bias_mean>0.05</bias_mean>
+                <bias_stddev>0.0075</bias_stddev>
+                <dynamic_bias_stddev>0.000375</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>175.0</dynamic_bias_correlation_time>
+                <precision>0.005</precision>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
 	
+	<plugin name='imu' filename='libgazebo_ros_imu_sensor.so'>
+	  <ros>
+	    <!-- publish to /imu/data -->
+	    <namespace>/p2dx</namespace>
+	    <remapping>~/out:=imu</remapping>
+	    <output_type>sensor_msgs/Imu</output_type>
+	  </ros>
+	</plugin>
+      </sensor>
+
+      
+         
+
+      
+    </link>
+
+    <joint type="fixed" name="imu_joint">
+      <parent>base_link</parent>
+      <child>imu_link</child>
+      <pose>0 0 0.01 0 0 0"</pose>
+    </joint>
+
+
+    
+    
+    <plugin name="skid_steer_drive" filename="libgazebo_ros_diff_drive.so">
+
+      <ros>
+        <namespace>/p2dx</namespace>
+        <!--  <remapping>cmd_vel:=cmd_demo</remapping>
+             <remapping>odom:=odom_demo</remapping> -->
+      </ros>
+
+      <updateRate>100.0</updateRate>
+      
       <num_wheel_pairs>1</num_wheel_pairs>
       
       <right_joint>right_wheel_hinge</right_joint>
       <left_joint>left_wheel_hinge</left_joint>
 
 
-       <wheel_separation>0.34</wheel_separation>       
-	<wheel_diameter>0.2</wheel_diameter>
+      <wheel_separation>0.34</wheel_separation>       
+      <wheel_diameter>0.2</wheel_diameter>
 
-      	<!-- limits -->
-        <max_wheel_torque>35</max_wheel_torque>
-        <max_wheel_acceleration>0.5</max_wheel_acceleration>
+      <!-- limits -->
+      <max_wheel_torque>35</max_wheel_torque>
+      <max_wheel_acceleration>0.5</max_wheel_acceleration>
 
-        <!-- output -->
-        <publish_odom>true</publish_odom>
-        <publish_odom_tf>true</publish_odom_tf>
-        <publish_wheel_tf>true</publish_wheel_tf>
+      <!-- output -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
 
     </plugin>
-    
-
-
-
 
   </model>
 </sdf>
