@@ -46,7 +46,10 @@ int main(int argc,char **argv) {
   goal_pos->position.y = -1;
   goal_pos->orientation.w = 1;
   navigator.GoToPose(goal_pos);
-  navigator.CancelTask();
+  while ( ! navigator.IsTaskComplete() ) {
+    
+  }
+  navigator.Backup();
   while ( ! navigator.IsTaskComplete() ) {
     
   }
