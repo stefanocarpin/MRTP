@@ -77,7 +77,9 @@ int main(int argc,char **argv) {
 
   rclcpp::init(argc,argv); // initialize the ROS subsystem
   ActionCaller node; // create node
-  node.Spin(0.6);
+  node.Spin(2.0); // turn ~ 114 degrees
+  while ( node.isSpinning() )
+    rclcpp::spin_some(node.get_node_base_interface());
   rclcpp::shutdown(); // shutdown ROS
   return 0;
 }
