@@ -23,6 +23,7 @@ limitations under the License.
 #define NONE 0
 #define SPIN 1
 #define GO_TO_POSE 2
+#define BACKUP 3
 
 Navigator::Navigator(bool debug,bool verbose) : rclcpp::Node("navigator")
 {
@@ -38,6 +39,7 @@ Navigator::Navigator(bool debug,bool verbose) : rclcpp::Node("navigator")
     ("amcl_pose",10,std::bind(&Navigator::amcl_pose_callback,this,std::placeholders::_1));
   spin_client = rclcpp_action::create_client<nav2_msgs::action::Spin>(this,"spin");
   nav_to_pose_client = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(this,"navigate_to_pose");
+  backup_client = rclcpp_action::create_client<nav2_msgs::action::BackUp>(this,"back_up");
 
   if (debug)
     RCLCPP_INFO(get_logger(),"Created instance of Navigator...");
@@ -80,7 +82,6 @@ bool Navigator::Spin(double spin_dist)
   spin_client->wait_for_action_server();
   auto goal_message = nav2_msgs::action::Spin::Goal();
   goal_message.target_yaw = spin_dist;
-
 
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::Spin>::SendGoalOptions();
   send_goal_options.goal_response_callback =
@@ -150,6 +151,52 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
   return true;
 }
 
+bool Navigator::Backup(double backup_dist,double backup_speed)
+{
+  using namespace std::placeholders;
+  if (debug)
+    RCLCPP_INFO(get_logger(),"Waiting for backup action server");
+  backup_client->wait_for_action_server();
+  auto goal_msg = nav2_msgs::action::BackUp::Goal();
+  goal_msg.target.x = -backup_dist; 
+  goal_msg.speed = backup_speed;
+
+  auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::BackUp>::SendGoalOptions();
+  /*send_goal_options.goal_response_callback =
+    std::bind(&Navigator::go_to_pose_goal_response_callback, this, _1);
+  */
+  send_goal_options.goal_response_callback =
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::SharedPtr>>, this, _1);
+  
+  send_goal_options.feedback_callback =
+    std::bind(&Navigator::backup_feedback_callback, this, _1, _2);
+  
+  send_goal_options.result_callback =
+    std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::WrappedResult>, this, _1);
+
+  current_executing = BACKUP;
+  auto send_goal_future = backup_client->async_send_goal(goal_msg,send_goal_options);
+  rclcpp::spin_until_future_complete(this->get_node_base_interface(),send_goal_future);
+  auto goal_handle = send_goal_future.get();
+  if (goal_handle != NULL ) {
+    if ( goal_handle->get_status() != action_msgs::msg::GoalStatus::STATUS_ACCEPTED ) {
+      if (debug)
+	RCLCPP_INFO(this->get_logger(),"BackUp request was rejected");
+      current_executing = NONE;
+      return false;
+    }
+  }
+  else {
+    if (debug)
+      RCLCPP_INFO(this->get_logger(),"BackUp request was rejected");
+    current_executing = NONE;
+    return false;
+  }
+  future_backup = backup_client->async_get_result(goal_handle);
+  
+  return true;
+}
+
 bool Navigator::IsTaskComplete() {
   using namespace std::chrono_literals;
   
@@ -158,12 +205,16 @@ bool Navigator::IsTaskComplete() {
   if (verbose)
     RCLCPP_INFO(get_logger(),"IsTaskComplete waiting for %d",current_executing);
   switch(current_executing) {
-  case 1: {
+  case SPIN: {
     check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::WrappedResult>>(future_spin);
     break;
   }
-  case 2: {
+  case GO_TO_POSE: {
     check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult>>(future_go_to_pose);
+    break;
+  }
+  case BACKUP: {
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::WrappedResult>>(future_backup);
     break;
   }
   default:
@@ -286,6 +337,15 @@ void Navigator::spin_feedback_callback(rclcpp_action::ClientGoalHandle<nav2_msgs
   }
 }
 
+void Navigator::backup_feedback_callback(rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::SharedPtr,
+				       const std::shared_ptr<const nav2_msgs::action::BackUp::Feedback>)
+{
+  if (verbose) {
+    RCLCPP_INFO(get_logger(),"In spin feedback");
+    RCLCPP_INFO(get_logger(),"Leaving spin feedback");
+  }
+}
+
 void Navigator::go_to_pose_goal_response_callback(std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr> future)
 {
   if (debug) {
@@ -295,6 +355,21 @@ void Navigator::go_to_pose_goal_response_callback(std::shared_future<rclcpp_acti
       RCLCPP_ERROR(this->get_logger(), "Goal was rejected by navigate_to_pose server");
     } else {
       RCLCPP_INFO(this->get_logger(), "Goal accepted by navigate_to_pose server, waiting for result");
+    }
+  }
+}
+
+
+template<typename T>
+void Navigator::generic_goal_response_callback(T future)
+{
+  if (debug) {
+    RCLCPP_INFO(this->get_logger(), "In task %d response callback",current_executing);
+    auto goal_handle = future.get();
+    if (!goal_handle) {
+      RCLCPP_ERROR(this->get_logger(), "Goal was rejected by server");
+    } else {
+      RCLCPP_INFO(this->get_logger(), "Goal accepted by server, waiting for result");
     }
   }
 }
