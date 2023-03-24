@@ -38,9 +38,9 @@ int main(int argc,char **argv) {
     // other fields in toSend should be initialized, too...
     
     while (rclcpp::ok()) {
-      // generate random distances 
+      // generate random distances in range 0-2 
       for (int i = 0; i < NDATA ; i++)
-	toSend.ranges[i] = rand()/RAND_MAX;
+	toSend.ranges[i] = (2*float(rand()))/RAND_MAX;
       RCLCPP_INFO(nodeh->get_logger(),"Publishing scan #%d",iteration++);
       pubs->publish(toSend); // publish
       rate.sleep();
