@@ -24,7 +24,8 @@ public:
   FindClosest():Node("pubsubstl") {
     pubf = this->create_publisher<std_msgs::msg::Float32>("closest",1000);
     sub = this->create_subscription<sensor_msgs::msg::LaserScan>
-      ("scan",10,std::bind(&FindClosest::processScan,this,std::placeholders::_1));
+          ("scan",10,std::bind(&FindClosest::processScan,
+			       this,std::placeholders::_1));
   }
   
 private:
