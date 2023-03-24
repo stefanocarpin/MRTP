@@ -41,7 +41,7 @@ int main(int argc,char ** argv) {
 
   nodeh = rclcpp::Node::make_shared("pubsub"); // create node
 
-  // create publisher (gloabl variable)
+  // create publisher (global variable)
   pubf = nodeh->create_publisher<std_msgs::msg::Float32>("closest",1000);
   // create subscriber and register callback function
   auto sub = nodeh->create_subscription<sensor_msgs::msg::LaserScan>
