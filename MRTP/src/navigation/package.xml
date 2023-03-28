@@ -3,7 +3,7 @@
 <package format="3">
   <name>navigation</name>
   <version>0.0.1</version>
-  <description>Navigation examples in the MRTP book</description>
+  <description>C++ porting of Simple Commandre API</description>
   <maintainer email="scarpin@ucmerced.edu">Stefano Carpin</maintainer>
   <license>Apache License 2.0</license>
 
@@ -12,7 +12,6 @@
   <depend>std_msgs</depend>
   <depend>sensr_msgs</depend>
   <depend>geometry_msgs</depend>
-  <depend>turtlesim</depend>
   <depend>tf2</depend>
   <depend>tf2_ros</depend>
   <depend>rcl_interfaces</depend>

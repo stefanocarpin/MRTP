@@ -1,0 +1,1 @@
+This package is a C++ porting of the Simple Commander API provided with Nav2. See https://navigation.ros.org/commander_api/ for a more thorough discussion of "navigatin as a library".

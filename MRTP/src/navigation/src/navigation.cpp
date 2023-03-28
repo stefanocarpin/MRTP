@@ -45,6 +45,9 @@ Navigator::Navigator(bool debug,bool verbose) : rclcpp::Node("navigator")
   backup_client = rclcpp_action::create_client<nav2_msgs::action::BackUp>(this,"back_up");
   compute_path_to_pose_client = rclcpp_action::create_client<nav2_msgs::action::ComputePathToPose>(this,"compute_path_to_pose");
 
+  clear_global_costmap_srv = create_client<nav2_msgs::srv::ClearEntireCostmap>("/global_costmap/clear_entirely_global_costmap");
+  clear_local_costmap_srv = create_client<nav2_msgs::srv::ClearEntireCostmap>("/global_costmap/clear_entirely_local_costmap");
+  
   if (debug)
     RCLCPP_INFO(get_logger(),"Created instance of Navigator...");
 }
@@ -316,6 +319,31 @@ void Navigator::check_complete(T future) {
     auto result = future.get();
     status = result.code;
   }
+}
+
+void Navigator::ClearGlobalCostmap() {
+  using namespace std::chrono_literals;
+  while ( ! clear_global_costmap_srv->wait_for_service(1s) )
+    if ( debug )
+      RCLCPP_INFO(get_logger(),"Clear global costmaps service not available, waiting...");
+  auto request = std::make_shared<nav2_msgs::srv::ClearEntireCostmap::Request>();
+  auto response = clear_global_costmap_srv->async_send_request(request);
+  rclcpp::spin_until_future_complete(this->get_node_base_interface(),response);
+}
+
+void Navigator::ClearLocalCostmap() {
+  using namespace std::chrono_literals;
+  while ( ! clear_local_costmap_srv->wait_for_service(1s) )
+    if ( debug )
+      RCLCPP_INFO(get_logger(),"Clear local costmaps service not available, waiting...");
+  auto request = std::make_shared<nav2_msgs::srv::ClearEntireCostmap::Request>();
+  auto response = clear_local_costmap_srv->async_send_request(request);
+  rclcpp::spin_until_future_complete(this->get_node_base_interface(),response);
+}
+
+void Navigator::ClearAllCostmaps() {
+  ClearLocalCostmap();
+  ClearGlobalCostmap();
 }
 
 

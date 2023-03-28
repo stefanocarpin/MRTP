@@ -28,6 +28,8 @@ limitations under the License.
 #include <nav2_msgs/action/back_up.hpp>
 #include <nav2_msgs/action/compute_path_to_pose.hpp>
 
+#include <nav2_msgs/srv/clear_entire_costmap.hpp>
+
 #include <nav_msgs/msg/path.hpp>
 
 
@@ -50,6 +52,9 @@ public:
   bool IsTaskComplete();
   rclcpp_action::ResultCode GetResult() { return status; }
   void CancelTask();
+  void ClearGlobalCostmap();
+  void ClearLocalCostmap();
+  void ClearAllCostmaps();
   
   
 private:
@@ -73,7 +78,9 @@ private:
   rclcpp_action::Client<nav2_msgs::action::BackUp>::SharedPtr backup_client;
   rclcpp_action::Client<nav2_msgs::action::ComputePathToPose>::SharedPtr compute_path_to_pose_client;
   
-
+  rclcpp::Client<nav2_msgs::srv::ClearEntireCostmap>::SharedPtr clear_global_costmap_srv;
+  rclcpp::Client<nav2_msgs::srv::ClearEntireCostmap>::SharedPtr clear_local_costmap_srv;
+  
   
   void set_initial_pose();
   void wait_for_initial_pose();
