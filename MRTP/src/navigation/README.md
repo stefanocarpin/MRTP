@@ -86,7 +86,7 @@ The C++ <code>Navigator</code> class is the equivalent of the Python <code>Basic
 <tbody>
 </table>
 
-Internal methods (those with the name starting with <code>_</code> have either been ported as private methods, or not ported or implemented differnetly. Either way, they are not available.
+Internal methods (those with the name starting with <code>_</code>) have either been ported as private methods, or not ported or implemented differnetly. Either way, they are not available.
 
 API Differences<br>
 <ul>
