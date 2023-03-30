@@ -18,17 +18,12 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(turtlesim REQUIRED)
-find_package(tf2 REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(rcl_interfaces REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
+find_package(action_msgs REQUIRED)
 
 
 if(BUILD_TESTING)
@@ -45,6 +40,7 @@ endif()
 
 add_library(navigator src/navigation.cpp)
 add_executable(testnavigation src/testnavigator.cpp src/navigation.cpp)
+add_executable(testpackage src/testpackage.cpp src/navigation.cpp)
 
 target_include_directories(navigator
   PUBLIC
@@ -56,11 +52,17 @@ target_include_directories(testnavigation
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
+target_include_directories(testpackage
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+
 
 ament_target_dependencies(navigator rclcpp geometry_msgs lifecycle_msgs rclcpp_action nav2_msgs)
 ament_export_targets(navigatorlib HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp geometry_msgs lifecycle_msgs rclcpp_action nav2_msgs)
 ament_target_dependencies(testnavigation rclcpp geometry_msgs lifecycle_msgs rclcpp_action nav2_msgs)
+ament_target_dependencies(testpackage rclcpp geometry_msgs lifecycle_msgs rclcpp_action nav2_msgs)
 
 
 install(
@@ -78,6 +80,7 @@ install(
   )
 
 install(TARGETS testnavigation DESTINATION lib/${PROJECT_NAME})
+install(TARGETS testpackage DESTINATION lib/${PROJECT_NAME})
 
 
 ament_package()

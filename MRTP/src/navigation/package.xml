@@ -3,18 +3,13 @@
 <package format="3">
   <name>navigation</name>
   <version>0.0.1</version>
-  <description>C++ porting of Simple Commandre API</description>
+  <description>C++ porting of Simple Commander API</description>
   <maintainer email="scarpin@ucmerced.edu">Stefano Carpin</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
-  <depend>std_msgs</depend>
-  <depend>sensr_msgs</depend>
   <depend>geometry_msgs</depend>
-  <depend>tf2</depend>
-  <depend>tf2_ros</depend>
-  <depend>rcl_interfaces</depend>
   <depend>nav2_msgs</depend>
   <depend>rclcpp_action</depend>
   

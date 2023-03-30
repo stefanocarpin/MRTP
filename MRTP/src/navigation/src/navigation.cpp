@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <rclcpp/rclcpp.hpp> // needed for basic functions
+#include <rclcpp/rclcpp.hpp> 
 #include <navigation/navigation.hpp>
 #include <lifecycle_msgs/srv/get_state.hpp>
-#include <rclcpp/qos.hpp>
+#include <action_msgs/srv/cancel_goal.hpp>
 #include <chrono>
 
 #define NONE 0
@@ -25,8 +25,10 @@ limitations under the License.
 #define GO_TO_POSE 2
 #define BACKUP 3
 #define COMPUTE_PATH 4
+#define FOLLOW_PATH 5
+#define FOLLOW_WAYPOINTS 6
 
-const char *server_names[] = { "None", "Spin", "Go to Pose", "Backup" , "Compute Path" };
+const char *server_names[] = { "None", "Spin", "Go to Pose", "Backup" , "Compute Path" , "Follow Path" , "Follow Waypoints"};
 
 Navigator::Navigator(bool debug,bool verbose) : rclcpp::Node("navigator")
 {
@@ -38,22 +40,30 @@ Navigator::Navigator(bool debug,bool verbose) : rclcpp::Node("navigator")
   status = rclcpp_action::ResultCode::UNKNOWN;
   
   initial_pose_publisher = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("initialpose",10);
-   localization_pose_subscriber = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>
+  localization_pose_subscriber = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>
     ("amcl_pose",10,std::bind(&Navigator::amcl_pose_callback,this,std::placeholders::_1));
   spin_client = rclcpp_action::create_client<nav2_msgs::action::Spin>(this,"spin");
   nav_to_pose_client = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(this,"navigate_to_pose");
+  follow_path_client = rclcpp_action::create_client<nav2_msgs::action::FollowPath>(this,"follow_path");
   backup_client = rclcpp_action::create_client<nav2_msgs::action::BackUp>(this,"back_up");
   compute_path_to_pose_client = rclcpp_action::create_client<nav2_msgs::action::ComputePathToPose>(this,"compute_path_to_pose");
-
+  follow_waypoints_client = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(this,"FollowWaypoints");
+  
   clear_global_costmap_srv = create_client<nav2_msgs::srv::ClearEntireCostmap>("/global_costmap/clear_entirely_global_costmap");
-  clear_local_costmap_srv = create_client<nav2_msgs::srv::ClearEntireCostmap>("/global_costmap/clear_entirely_local_costmap");
+  clear_local_costmap_srv = create_client<nav2_msgs::srv::ClearEntireCostmap>("/local_costmap/clear_entirely_local_costmap");
+  
+  get_local_costmap_srv = create_client<nav2_msgs::srv::GetCostmap>("/local_costmap/get_costmap");
+  get_global_costmap_srv = create_client<nav2_msgs::srv::GetCostmap>("/global_costmap/get_costmap");
+  change_map_srv = create_client<nav2_msgs::srv::LoadMap>("/map_server/load_map");
+
+  feedback_ptr = nullptr;
   
   if (debug)
     RCLCPP_INFO(get_logger(),"Created instance of Navigator...");
 }
 
 Navigator::~Navigator() {
-
+  CancelTask();
 }
 
 void Navigator::SetInitialPose(const geometry_msgs::msg::Pose::SharedPtr pose)
@@ -99,7 +109,7 @@ bool Navigator::Spin(double spin_dist)
   
   send_goal_options.feedback_callback =
    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::SharedPtr,
-	      const std::shared_ptr<const nav2_msgs::action::Spin::Feedback>>, this, _1, _2);
+	      const std::shared_ptr<const nav2_msgs::action::Spin::Feedback> >, this, _1, _2);
   
   send_goal_options.result_callback =
     std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::WrappedResult>, this, _1);
@@ -140,38 +150,130 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
 
   current_executing = GO_TO_POSE;
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions();
-
+  
   send_goal_options.goal_response_callback =
     std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr>>, this, _1);
   
  send_goal_options.feedback_callback =
-    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr,
-	      const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback>>, this, _1, _2);
+   std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr,
+	     const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback>>, this, _1, _2);
+  
+ send_goal_options.result_callback =
+   std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult>, this, _1);
+
+ auto send_goal_future = nav_to_pose_client->async_send_goal(goal_msg,send_goal_options);
+ rclcpp::spin_until_future_complete(this->get_node_base_interface(),send_goal_future);
+ auto goal_handle = send_goal_future.get();
+ if (goal_handle != NULL ) {
+   if ( goal_handle->get_status() != action_msgs::msg::GoalStatus::STATUS_ACCEPTED ) {
+     if (debug)
+       RCLCPP_INFO(this->get_logger(),"GoToPose request was rejected");
+     current_executing = NONE;
+     return false;
+   }
+ }
+ else {
+   if (debug)
+     RCLCPP_INFO(this->get_logger(),"GoToPose request was rejected");
+   current_executing = NONE;    
+   return false;
+ }
+ if (debug)
+   RCLCPP_INFO(this->get_logger(),"GoToPose request was accepted.");
+ future_go_to_pose = nav_to_pose_client->async_get_result(goal_handle);
+ 
+ return true;
+}
+
+bool Navigator::FollowPath(const nav_msgs::msg::Path::SharedPtr path)
+{
+  using namespace std::placeholders;
+  if (debug)
+    RCLCPP_INFO(get_logger(),"Waiting for FollowPath action server");
+  follow_path_client->wait_for_action_server();
+  auto goal_msg = nav2_msgs::action::FollowPath::Goal();
+  goal_msg.path = nav_msgs::msg::Path(*path);
+
+  current_executing = FOLLOW_PATH;
+  auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::FollowPath>::SendGoalOptions();
+
+  send_goal_options.goal_response_callback =
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::SharedPtr>>, this, _1);
+  
+  send_goal_options.feedback_callback =
+    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::SharedPtr,
+	      const std::shared_ptr<const nav2_msgs::action::FollowPath::Feedback>>, this, _1, _2);
   
   send_goal_options.result_callback =
-    std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult>, this, _1);
+    std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::WrappedResult>, this, _1);
 
-  auto send_goal_future = nav_to_pose_client->async_send_goal(goal_msg,send_goal_options);
+  auto send_goal_future = follow_path_client->async_send_goal(goal_msg,send_goal_options);
   rclcpp::spin_until_future_complete(this->get_node_base_interface(),send_goal_future);
   auto goal_handle = send_goal_future.get();
   if (goal_handle != NULL ) {
     if ( goal_handle->get_status() != action_msgs::msg::GoalStatus::STATUS_ACCEPTED ) {
       if (debug)
-	RCLCPP_INFO(this->get_logger(),"GoToPose request was rejected");
+	RCLCPP_INFO(this->get_logger(),"FollowPath request was rejected");
       current_executing = NONE;
       return false;
     }
   }
   else {
     if (debug)
-      RCLCPP_INFO(this->get_logger(),"GoToPose request was rejected");
+      RCLCPP_INFO(this->get_logger(),"FollowPath request was rejected");
     current_executing = NONE;    
     return false;
   }
-  future_go_to_pose = nav_to_pose_client->async_get_result(goal_handle);
+  future_follow_path = follow_path_client->async_get_result(goal_handle);
 
   return true;
 }
+
+
+bool Navigator::FollowWaypoints(const std::vector<geometry_msgs::msg::PoseStamped>& poses) {
+  using namespace std::placeholders;
+  if (debug)
+    RCLCPP_INFO(get_logger(),"Waiting for FollowWaypoint action server");
+  follow_waypoints_client->wait_for_action_server();
+  auto goal_msg = nav2_msgs::action::FollowWaypoints::Goal();
+  goal_msg.poses = poses;
+
+  current_executing = FOLLOW_WAYPOINTS;
+  auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SendGoalOptions();
+
+  send_goal_options.goal_response_callback =
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::SharedPtr>>, this, _1);
+  
+  send_goal_options.feedback_callback =
+    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::SharedPtr,
+	      const std::shared_ptr<const nav2_msgs::action::FollowWaypoints::Feedback>>, this, _1, _2);
+  
+  send_goal_options.result_callback =
+    std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::WrappedResult>, this, _1);
+
+  auto send_goal_future = follow_waypoints_client->async_send_goal(goal_msg,send_goal_options);
+  rclcpp::spin_until_future_complete(this->get_node_base_interface(),send_goal_future);
+  auto goal_handle = send_goal_future.get();
+  if (goal_handle != NULL ) {
+    if ( goal_handle->get_status() != action_msgs::msg::GoalStatus::STATUS_ACCEPTED ) {
+      if (debug)
+	RCLCPP_INFO(this->get_logger(),"FollowWaypoints request was rejected");
+      current_executing = NONE;
+      return false;
+    }
+  }
+  else {
+    if (debug)
+      RCLCPP_INFO(this->get_logger(),"FollowWaypoints request was rejected");
+    current_executing = NONE;    
+    return false;
+  }
+  future_follow_waypoints = follow_waypoints_client->async_get_result(goal_handle);
+
+  return true;
+}
+
+
 
 bool Navigator::Backup(double backup_dist,double backup_speed)
 {
@@ -220,15 +322,12 @@ bool Navigator::Backup(double backup_dist,double backup_speed)
 }
 
 std::shared_ptr<nav_msgs::msg::Path> Navigator::GetPath(const geometry_msgs::msg::Pose::SharedPtr pose) {
-
   if  ( get_path_internal(pose)==false )
     return nullptr; // if call fails, return null pointer
   rclcpp::spin_until_future_complete(this->get_node_base_interface(),future_compute_path_to_pose); // wait for result
   auto result = future_compute_path_to_pose.get();
-
   current_executing = NONE;
-  return std::make_shared<nav_msgs::msg::Path>(result.result->path);
-  
+  return std::make_shared<nav_msgs::msg::Path>(result.result->path); 
 }
 
 bool Navigator::get_path_internal(const geometry_msgs::msg::Pose::SharedPtr pose){
@@ -301,6 +400,14 @@ bool Navigator::IsTaskComplete() {
     check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::WrappedResult>>(future_compute_path_to_pose);
     break;
   }
+  case FOLLOW_PATH: { 
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::WrappedResult>>(future_follow_path);
+    break;
+  }
+  case FOLLOW_WAYPOINTS: { 
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::WrappedResult>>(future_follow_waypoints);
+    break;
+  }
   default:
     RCLCPP_ERROR(get_logger(),"Undefined task in progress");
   }
@@ -325,20 +432,32 @@ void Navigator::ClearGlobalCostmap() {
   using namespace std::chrono_literals;
   while ( ! clear_global_costmap_srv->wait_for_service(1s) )
     if ( debug )
-      RCLCPP_INFO(get_logger(),"Clear global costmaps service not available, waiting...");
+      RCLCPP_INFO(get_logger(),"Clear global costmap service not available, waiting...");
   auto request = std::make_shared<nav2_msgs::srv::ClearEntireCostmap::Request>();
   auto response = clear_global_costmap_srv->async_send_request(request);
-  rclcpp::spin_until_future_complete(this->get_node_base_interface(),response);
+  auto future_return = rclcpp::spin_until_future_complete(this->get_node_base_interface(),response);
+  if (debug) {
+    if ( future_return == rclcpp::FutureReturnCode::SUCCESS)
+      RCLCPP_INFO(get_logger(),"Clear global costmap service successfully called");
+    else
+      RCLCPP_INFO(get_logger(),"Clear global costmap service failed");
+  }
 }
 
 void Navigator::ClearLocalCostmap() {
   using namespace std::chrono_literals;
   while ( ! clear_local_costmap_srv->wait_for_service(1s) )
     if ( debug )
-      RCLCPP_INFO(get_logger(),"Clear local costmaps service not available, waiting...");
+      RCLCPP_INFO(get_logger(),"Clear local costmap service not available, waiting...");
   auto request = std::make_shared<nav2_msgs::srv::ClearEntireCostmap::Request>();
   auto response = clear_local_costmap_srv->async_send_request(request);
-  rclcpp::spin_until_future_complete(this->get_node_base_interface(),response);
+  auto future_return = rclcpp::spin_until_future_complete(this->get_node_base_interface(),response);
+   if (debug) {
+    if ( future_return == rclcpp::FutureReturnCode::SUCCESS)
+      RCLCPP_INFO(get_logger(),"Clear local costmap service successfully called");
+    else
+      RCLCPP_INFO(get_logger(),"Clear local costmap service failed");
+  }
 }
 
 void Navigator::ClearAllCostmaps() {
@@ -346,6 +465,73 @@ void Navigator::ClearAllCostmaps() {
   ClearGlobalCostmap();
 }
 
+std::shared_ptr<nav2_msgs::msg::Costmap> Navigator::GetGlobalCostmap() {
+  using namespace std::chrono_literals;
+  while ( ! get_global_costmap_srv->wait_for_service(1s) )
+    if ( debug )
+      RCLCPP_INFO(get_logger(),"Get global costmap service not available, waiting...");
+  auto request = std::make_shared<nav2_msgs::srv::GetCostmap::Request>();
+  auto future_get_map = get_global_costmap_srv->async_send_request(request);
+  auto future_return = rclcpp::spin_until_future_complete(this->get_node_base_interface(),future_get_map);
+
+  if (debug) {
+    if ( future_return == rclcpp::FutureReturnCode::SUCCESS)
+      RCLCPP_INFO(get_logger(),"Get global costmap service successfully called");
+    else
+      RCLCPP_INFO(get_logger(),"Get global costmap service failed");
+  }
+  if ( future_return == rclcpp::FutureReturnCode::SUCCESS ) {
+    auto result = future_get_map.get();
+    return std::make_shared<nav2_msgs::msg::Costmap>(result->map);
+  }
+  else
+    return nullptr;
+}
+
+std::shared_ptr<nav2_msgs::msg::Costmap> Navigator::GetLocalCostmap() {
+  using namespace std::chrono_literals;
+  while ( ! get_local_costmap_srv->wait_for_service(1s) )
+    if ( debug )
+      RCLCPP_INFO(get_logger(),"Get local costmap service not available, waiting...");
+  auto request = std::make_shared<nav2_msgs::srv::GetCostmap::Request>();
+  auto future_get_map = get_local_costmap_srv->async_send_request(request);
+  auto future_return = rclcpp::spin_until_future_complete(this->get_node_base_interface(),future_get_map);
+
+  if (debug) {
+    if ( future_return == rclcpp::FutureReturnCode::SUCCESS)
+      RCLCPP_INFO(get_logger(),"Get local costmap service successfully called");
+    else
+      RCLCPP_INFO(get_logger(),"Get local costmap service failed");
+  }
+  if ( future_return == rclcpp::FutureReturnCode::SUCCESS ) {
+    auto result = future_get_map.get();
+    return std::make_shared<nav2_msgs::msg::Costmap>(result->map);
+  }
+  else
+    return nullptr;
+}
+
+void Navigator::ChangeMap(const std::string& map_filepath) {
+  using namespace std::chrono_literals;
+  while ( ! change_map_srv->wait_for_service(1s) )
+    if ( debug )
+      RCLCPP_INFO(get_logger(),"Change map service not available, waiting...");
+  auto request = std::make_shared<nav2_msgs::srv::LoadMap::Request>();
+  request->map_url = map_filepath;
+  auto future_change_map = change_map_srv->async_send_request(request);
+  rclcpp::spin_until_future_complete(this->get_node_base_interface(),future_change_map);
+  auto result = future_change_map.get();
+  if (debug) {
+    if (result->result != result->RESULT_SUCCESS)
+      RCLCPP_INFO(get_logger(),"Change map request failed");
+    else
+      RCLCPP_INFO(get_logger(),"Change map request was successful");
+  }
+  if (result->result == result->RESULT_SUCCESS)
+    status = rclcpp_action::ResultCode::SUCCEEDED;
+  else
+    status = rclcpp_action::ResultCode::CANCELED;
+}
 
 void Navigator::CancelTask() {
   
@@ -371,14 +557,21 @@ void Navigator::CancelTask() {
      cancel_generic_goal<rclcpp_action::Client<nav2_msgs::action::ComputePathToPose>::SharedPtr>(compute_path_to_pose_client);
      break;
    }
+   case FOLLOW_PATH: {
+     cancel_generic_goal<rclcpp_action::Client<nav2_msgs::action::FollowPath>::SharedPtr>(follow_path_client);
+     break;
+   }
+   case FOLLOW_WAYPOINTS: {
+     cancel_generic_goal<rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SharedPtr>(follow_waypoints_client);
+     break;
+   } 
    default:
      RCLCPP_ERROR(get_logger(),"Undefined task in progress");
    }
-   current_executing = NONE;
+   if (status == rclcpp_action::ResultCode::CANCELED) // if cancel request was accepted
+     while (current_executing != NONE ) // waits for the task to end
+       rclcpp::spin_some(get_node_base_interface());
 }
-
-
-
 
 void Navigator::set_initial_pose()
 {
@@ -401,7 +594,7 @@ void Navigator::wait_for_initial_pose()
   }
 }
 
-void Navigator::wait_for_node_to_activate(const std::string node_name)
+void Navigator::wait_for_node_to_activate(const std::string& node_name)
 {
   using namespace std::chrono_literals;
 
@@ -447,7 +640,6 @@ void Navigator::generic_goal_response_callback(T future)
   }
 }
 
-
 template<typename T>
 void Navigator::generic_result_callback(const T result)
 {
@@ -460,10 +652,10 @@ void Navigator::generic_result_callback(const T result)
 }
 
 template<typename T,typename Q>
-void Navigator::generic_feedback_callback(T,Q) {
+void Navigator::generic_feedback_callback(T,Q feedback) {
   if (verbose) 
     RCLCPP_INFO(get_logger(),"In feedback executing action %s",server_names[current_executing]);
-  
+  feedback_ptr = feedback;
 }
 
 template<typename T>
@@ -471,6 +663,12 @@ void Navigator::cancel_generic_goal(T client)
 {
   auto future = client->async_cancel_all_goals();
   rclcpp::spin_until_future_complete(get_node_base_interface(),future);
+  auto result = future.get();
+  auto return_code = result->return_code;
+  if (return_code == action_msgs::srv::CancelGoal::Response::ERROR_NONE) 
+    status = rclcpp_action::ResultCode::CANCELED;
+  else
+    status = rclcpp_action::ResultCode::UNKNOWN;
 }
 
 

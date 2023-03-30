@@ -27,13 +27,18 @@ limitations under the License.
 #include <nav2_msgs/action/navigate_to_pose.hpp>
 #include <nav2_msgs/action/back_up.hpp>
 #include <nav2_msgs/action/compute_path_to_pose.hpp>
+#include <nav2_msgs/action/follow_path.hpp>
+#include <nav2_msgs/action/follow_waypoints.hpp>
 
 #include <nav2_msgs/srv/clear_entire_costmap.hpp>
+#include <nav2_msgs/srv/get_costmap.hpp>
+#include <nav2_msgs/srv/load_map.hpp>
 
 #include <nav_msgs/msg/path.hpp>
-
+#include <nav2_msgs/msg/costmap.hpp>
 
 #include <string>
+#include <vector>
 
 class Navigator : public rclcpp::Node {
 
@@ -47,14 +52,20 @@ public:
   void WaitUntilNav2Active();
   bool Spin(double=1.57);
   bool GoToPose(const geometry_msgs::msg::Pose::SharedPtr);
+  bool FollowPath(const nav_msgs::msg::Path::SharedPtr);
+  bool FollowWaypoints(const std::vector<geometry_msgs::msg::PoseStamped>&);
   bool Backup(double=0.15,double=0.25);
   std::shared_ptr<nav_msgs::msg::Path> GetPath(const geometry_msgs::msg::Pose::SharedPtr);
   bool IsTaskComplete();
   rclcpp_action::ResultCode GetResult() { return status; }
   void CancelTask();
+  std::shared_ptr<const void> GetFeedback() const { return feedback_ptr; };
   void ClearGlobalCostmap();
   void ClearLocalCostmap();
   void ClearAllCostmaps();
+  std::shared_ptr<nav2_msgs::msg::Costmap> GetGlobalCostmap();
+  std::shared_ptr<nav2_msgs::msg::Costmap> GetLocalCostmap();
+  void ChangeMap(const std::string&);
   
   
 private:
@@ -67,6 +78,8 @@ private:
   
   std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::WrappedResult> future_spin; 	
   std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult> future_go_to_pose;
+  std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::WrappedResult> future_follow_path;
+  std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::WrappedResult> future_follow_waypoints;
   std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::WrappedResult> future_backup;
   std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::WrappedResult> future_compute_path_to_pose;
   
@@ -75,32 +88,28 @@ private:
   
   rclcpp_action::Client<nav2_msgs::action::Spin>::SharedPtr spin_client;
   rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr nav_to_pose_client;
+  rclcpp_action::Client<nav2_msgs::action::FollowPath>::SharedPtr follow_path_client;
   rclcpp_action::Client<nav2_msgs::action::BackUp>::SharedPtr backup_client;
   rclcpp_action::Client<nav2_msgs::action::ComputePathToPose>::SharedPtr compute_path_to_pose_client;
+  rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SharedPtr follow_waypoints_client;
+
+  std::shared_ptr<const void> feedback_ptr;
   
   rclcpp::Client<nav2_msgs::srv::ClearEntireCostmap>::SharedPtr clear_global_costmap_srv;
   rclcpp::Client<nav2_msgs::srv::ClearEntireCostmap>::SharedPtr clear_local_costmap_srv;
+  rclcpp::Client<nav2_msgs::srv::GetCostmap>::SharedPtr get_local_costmap_srv;
+  rclcpp::Client<nav2_msgs::srv::GetCostmap>::SharedPtr get_global_costmap_srv;
+  rclcpp::Client<nav2_msgs::srv::LoadMap>::SharedPtr change_map_srv;
   
   
   void set_initial_pose();
   void wait_for_initial_pose();
-  void wait_for_node_to_activate(const std::string);
+  void wait_for_node_to_activate(const std::string&);
   
   void amcl_pose_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
   bool get_path_internal(const geometry_msgs::msg::Pose::SharedPtr);
+  bool smooth_internal(const geometry_msgs::msg::Pose::SharedPtr,float,bool);
 
-  
-  //void spin_goal_response_callback(std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::SharedPtr>);
-  //void spin_feedback_callback(rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::SharedPtr,
-  //			      const std::shared_ptr<const nav2_msgs::action::Spin::Feedback>);
-  
-  //void go_to_pose_goal_response_callback(std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr>);
-  //void go_to_pose_feedback_callback(rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr,
-  //			      const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback>);
-
-  //void backup_feedback_callback(rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::SharedPtr,
-  //			      const std::shared_ptr<const nav2_msgs::action::BackUp::Feedback>);
-  
   void print_result_diagnostic(void);
 
   template<typename T>
