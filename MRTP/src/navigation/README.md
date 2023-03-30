@@ -1,4 +1,4 @@
-This package is a C++ porting of the Simple Commander API provided with Nav2. See https://navigation.ros.org/commander_api/ for a more thorough discussion of "navigation as a library". This porting targets the Foxy distribution.
+This package is a C++ porting of the Simple Commander API provided with Nav2 and implemented in Python. See https://navigation.ros.org/commander_api/ for a more thorough discussion of "navigation as a library". This porting targets the Foxy distribution. Whenever possible, we follow the same API and also the internal implementation of the original Python implementation. 
 
 <b>Porting notes</b></br>
 The C++ <code>Navigator</code> class is the equivalent of the python <code>BasicNavigator</code> class. The following methods have been ported and offer the same functionalities (modulo some minor changes described below). 
@@ -86,10 +86,7 @@ The C++ <code>Navigator</code> class is the equivalent of the python <code>Basic
 <tbody>
 </table>
 
-
-
-
-
+Internal methods (those with the name starting with <code>_</code> have either been ported as private methods, or not ported or implemented differnetly. Either way, they are not available.
 
 API Differences<br>
 <ul>
@@ -98,3 +95,5 @@ API Differences<br>
 </ul>
 
 The following methods have <i>not</i> been ported: <code>goThroughPose</code>, <code>assistedTeleop</code>, <code>getPathThroughPoses</code>, <code>smoothPath</code>.
+
+  The file <code>testpackage.cpp</code> shows how each method can be called. To test it, follow the same Gazebo/RViz setup described in https://navigation.ros.org/getting_started/index.html
