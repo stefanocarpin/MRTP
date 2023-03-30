@@ -94,6 +94,6 @@ API Differences<br>
 <li> <code>GetFeedback</code> returns a generic pointer <code>std::shared_ptr < const void ></code>   that must be cast to the appropriat type to access the feedback message. See the <code>testpackage.cpp</code> for an example of how this is done.
 </ul>
 
-The following methods have <i>not</i> been ported: <code>goThroughPose</code>, <code>assistedTeleop</code>, <code>getPathThroughPoses</code>, <code>smoothPath</code>.
+The following methods have <i>not</i> been ported because the corresponding action servrs are not part of the Foxy distribution: <code>goThroughPose</code>, <code>assistedTeleop</code>, <code>getPathThroughPoses</code>, <code>smoothPath</code>.
 
   The file <code>testpackage.cpp</code> shows how each method can be called. To test it, follow the same Gazebo/RViz setup described in https://navigation.ros.org/getting_started/index.html
