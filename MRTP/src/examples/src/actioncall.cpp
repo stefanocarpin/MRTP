@@ -1,4 +1,4 @@
-/*
+x/*
 Copyright 2023 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,7 +66,7 @@ private:
   }
 
   void result_callback(const rclcpp_action::ClientGoalHandle
-		       <nav2_msgs::action::Spin>::WrappedResult result)
+		       <nav2_msgs::action::Spin>::WrappedResult & result)
   {
     RCLCPP_INFO(get_logger(),"Spin got result %d",result.code);
     spinning = false;
