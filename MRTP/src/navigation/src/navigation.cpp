@@ -105,7 +105,7 @@ bool Navigator::Spin(double spin_dist)
 
 
   send_goal_options.goal_response_callback =
-    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::SharedPtr>>, this, _1);
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::SharedPtr> >, this, _1);
   
   send_goal_options.feedback_callback =
    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::SharedPtr,
@@ -152,11 +152,11 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions();
   
   send_goal_options.goal_response_callback =
-    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr>>, this, _1);
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr> >, this, _1);
   
  send_goal_options.feedback_callback =
    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr,
-	     const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback>>, this, _1, _2);
+	     const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback> >, this, _1, _2);
   
  send_goal_options.result_callback =
    std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult>, this, _1);
@@ -198,11 +198,11 @@ bool Navigator::FollowPath(const nav_msgs::msg::Path::SharedPtr path)
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::FollowPath>::SendGoalOptions();
 
   send_goal_options.goal_response_callback =
-    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::SharedPtr>>, this, _1);
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::SharedPtr> >, this, _1);
   
   send_goal_options.feedback_callback =
     std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::SharedPtr,
-	      const std::shared_ptr<const nav2_msgs::action::FollowPath::Feedback>>, this, _1, _2);
+	      const std::shared_ptr<const nav2_msgs::action::FollowPath::Feedback> >, this, _1, _2);
   
   send_goal_options.result_callback =
     std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::WrappedResult>, this, _1);
@@ -242,11 +242,11 @@ bool Navigator::FollowWaypoints(const std::vector<geometry_msgs::msg::PoseStampe
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SendGoalOptions();
 
   send_goal_options.goal_response_callback =
-    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::SharedPtr>>, this, _1);
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::SharedPtr> >, this, _1);
   
   send_goal_options.feedback_callback =
     std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::SharedPtr,
-	      const std::shared_ptr<const nav2_msgs::action::FollowWaypoints::Feedback>>, this, _1, _2);
+	      const std::shared_ptr<const nav2_msgs::action::FollowWaypoints::Feedback> >, this, _1, _2);
   
   send_goal_options.result_callback =
     std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::WrappedResult>, this, _1);
@@ -289,11 +289,11 @@ bool Navigator::Backup(double backup_dist,double backup_speed)
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::BackUp>::SendGoalOptions();
   
   send_goal_options.goal_response_callback =
-    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::SharedPtr>>, this, _1);
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::SharedPtr> >, this, _1);
   
   send_goal_options.feedback_callback =
     std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::SharedPtr,
-	      const std::shared_ptr<const nav2_msgs::action::BackUp::Feedback>>, this, _1, _2);  
+	      const std::shared_ptr<const nav2_msgs::action::BackUp::Feedback> >, this, _1, _2);  
   
   send_goal_options.result_callback =
     std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::WrappedResult>, this, _1);
@@ -345,10 +345,10 @@ bool Navigator::get_path_internal(const geometry_msgs::msg::Pose::SharedPtr pose
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::ComputePathToPose>::SendGoalOptions();
   
   send_goal_options.goal_response_callback =
-    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::SharedPtr>>, this, _1);
+    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::SharedPtr> >, this, _1);
   send_goal_options.feedback_callback =
     std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::SharedPtr,
-	      const std::shared_ptr<const nav2_msgs::action::ComputePathToPose::Feedback>>, this, _1, _2);  
+	      const std::shared_ptr<const nav2_msgs::action::ComputePathToPose::Feedback> >, this, _1, _2);  
 
   send_goal_options.result_callback =
     std::bind(&Navigator::generic_result_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::WrappedResult>, this, _1);
@@ -385,27 +385,27 @@ bool Navigator::IsTaskComplete() {
     RCLCPP_INFO(get_logger(),"IsTaskComplete waiting for %s",server_names[current_executing]);
   switch(current_executing) {
   case SPIN: {
-    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::WrappedResult>>(future_spin);
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::WrappedResult> >(future_spin);
     break;
   }
   case GO_TO_POSE: {
-    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult>>(future_go_to_pose);
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult> >(future_go_to_pose);
     break;
   }
   case BACKUP: {
-    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::WrappedResult>>(future_backup);
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::WrappedResult> >(future_backup);
     break;
   }
   case COMPUTE_PATH: { // useless; but for completeness..
-    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::WrappedResult>>(future_compute_path_to_pose);
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::WrappedResult> >(future_compute_path_to_pose);
     break;
   }
   case FOLLOW_PATH: { 
-    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::WrappedResult>>(future_follow_path);
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::WrappedResult> >(future_follow_path);
     break;
   }
   case FOLLOW_WAYPOINTS: { 
-    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::WrappedResult>>(future_follow_waypoints);
+    check_complete<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::WrappedResult> >(future_follow_waypoints);
     break;
   }
   default:
