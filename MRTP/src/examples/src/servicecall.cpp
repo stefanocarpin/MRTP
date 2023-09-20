@@ -69,7 +69,7 @@ int main(int argc,char **argv) {
       // print result
       RCLCPP_INFO(nodeh->get_logger(), "Success? %d",
 		  response.get()->success);
-      RCLCPP_INFO(nodeh->get_logger(), "Status_message:",
+      RCLCPP_INFO(nodeh->get_logger(), "Status_message: %s",
 		  response.get()->status_message.c_str());
     }
     else // Error: 
