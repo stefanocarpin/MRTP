@@ -31,7 +31,7 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     
     pkg_dir = get_package_share_directory('gazeboenvs')
-    world = os.path.join(pkg_dir, 'worlds', 'empty.world')
+    world = os.path.join(pkg_dir, 'worlds', 'test.world')
     sdf_path = os.path.join(pkg_dir, 'models', 'pioneer3at', 'model.sdf')
     os.environ["GAZEBO_MODEL_PATH"] = os.path.join(pkg_dir, 'models')
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
