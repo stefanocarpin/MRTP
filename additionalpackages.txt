@@ -1,0 +1,20 @@
+Humble
+ros-humble-navigation2
+ros-humble-nav2-bringup
+ros-humble-turtlebot3-gazebo
+
+Iron
+ros-iron-navigation2
+ros-iron-nav2-bringup
+ros-humble-turtlebot3-gazebo
+
+To get rid of the warnings:
+pip install setuptools==58.2.0
+
+
+Jazzy
+Start with https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html and install ros-jazzy-desktop
+
+Then add the following packages
+
+
