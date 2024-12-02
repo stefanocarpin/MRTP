@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Stefano Carpin
+Copyright 2024 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -9,18 +9,21 @@ You may obtain a copy of the License at
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
-debugWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+debug WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
 
 #include <rclcpp/rclcpp.hpp> 
+#include <rclcpp_action/rclcpp_action.hpp>
 #include <nav2_msgs/action/spin.hpp>
-#include <rclcpp_action/rclcpp_action.hpp> 
+#include <action_msgs/msg/goal_status.hpp>
 
 class ActionCaller : public rclcpp::Node {
 
 public:
+  using GoalHandleSpin =
+   rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>;
   ActionCaller() : Node("actioncaller") {
     spin_client = rclcpp_action::create_client<nav2_msgs::action::Spin>
       (this,"spin");
@@ -53,10 +56,8 @@ public:
 private:
   rclcpp_action::Client<nav2_msgs::action::Spin>::SharedPtr spin_client;
   bool spinning;
-  void response_callback(std::shared_future<rclcpp_action::ClientGoalHandle
-			 <nav2_msgs::action::Spin>::SharedPtr> future)
+  void response_callback(const GoalHandleSpin::SharedPtr & goal_handle)
   {
-    auto goal_handle = future.get();
     if (!goal_handle) {
       RCLCPP_ERROR(this->get_logger(), "Goal was rejected by spin server");
     } else {
@@ -68,7 +69,8 @@ private:
   void result_callback(const rclcpp_action::ClientGoalHandle
 		       <nav2_msgs::action::Spin>::WrappedResult & result)
   {
-    RCLCPP_INFO(get_logger(),"Spin got result %d",result.code);
+    if (int(result.code) == action_msgs::msg::GoalStatus::STATUS_SUCCEEDED)
+      RCLCPP_INFO(get_logger(),"Spin completed with success");
     spinning = false;
   }
   
