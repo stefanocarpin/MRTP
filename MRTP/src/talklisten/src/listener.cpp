@@ -35,7 +35,6 @@ int main(int argc,char **argv) {
   sub = nodeh->create_subscription<std_msgs::msg::String>
                                              ("message",10,&callback);
   rclcpp::spin(nodeh);  // wait for messages and process them
- 
   rclcpp::shutdown();
   return 0;
   
