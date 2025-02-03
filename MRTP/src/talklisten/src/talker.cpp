@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 #include <rclcpp/rclcpp.hpp> // needed for basic functions
-#include <example_interfaces/msg/string.hpp> // needed because we publish strings
+#include <example_interfaces/msg/string.hpp> // needed to publish strings
 
 int main(int argc,char **argv) {
 
