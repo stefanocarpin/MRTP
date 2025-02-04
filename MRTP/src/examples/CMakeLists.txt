@@ -18,6 +18,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(example_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -54,8 +55,8 @@ add_executable(actioncall src/actioncall.cpp)
 
 
 
-ament_target_dependencies(sendarray rclcpp std_msgs)
-ament_target_dependencies(subarray rclcpp std_msgs)
+ament_target_dependencies(sendarray rclcpp example_interfaces)
+ament_target_dependencies(subarray rclcpp example_interfaces)
 ament_target_dependencies(sendmatrix rclcpp std_msgs)
 ament_target_dependencies(submatrix rclcpp std_msgs)
 ament_target_dependencies(pubsub rclcpp std_msgs sensor_msgs)
