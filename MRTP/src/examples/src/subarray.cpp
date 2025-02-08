@@ -21,7 +21,7 @@ rclcpp::Node::SharedPtr nodeh;
 
 // callback function to process incoming messages
 void arrayCallback(const example_interfaces::msg::Int32MultiArray::SharedPtr
-		                                                          msg) {
+		                                                        msg) {
   RCLCPP_INFO(nodeh->get_logger(),"Received new message");
   // just print everything to the screen
   for(unsigned int i = 0 ; i <msg->data.size() ; i++)
