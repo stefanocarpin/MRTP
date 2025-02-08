@@ -33,7 +33,7 @@ int main(int argc,char **argv) {
 
   // instance of message to send
   example_interfaces::msg::Int32MultiArray toSend;
-  int value;
+  int value=0;
     
   // setup layout for a matrix of size ROWS * COLS
   toSend.layout.dim.resize(2);  // dimensions
@@ -44,13 +44,13 @@ int main(int argc,char **argv) {
   toSend.layout.dim[1].stride = COLS; // separation between columns
   toSend.layout.dim[1].label = "col"; // label for second dimension
   toSend.layout.data_offset = 0; // no offset
-  toSend.data.resize(toSend.layout.dim[0].stride); // bumber of elements
+  toSend.data.resize(toSend.layout.dim[0].stride); // number of elements
   while (rclcpp::ok()) {
     // fills entry (i,j) with i*j+value
     for (int i = 0; i < ROWS ; i++) {
       for ( int j = 0 ; j < COLS ; j++ ) {
 	// note how access (i,j) in data
-	toSend.data[i*toSend.layout.dim[1].stride + j] = i*j+value;
+	toSend.data[i*toSend.layout.dim[1].stride + j] = i+j+value;
       }
     }
     value++;
