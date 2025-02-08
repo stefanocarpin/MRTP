@@ -15,42 +15,40 @@ limitations under the License.
 */
 
 #include <rclcpp/rclcpp.hpp> // needed for basic functions
-#include <example_interfaces/msg/int32_multi_array.hpp> //to send arrays of ints
-#include <example_interfaces/msg/multi_array_dimension.hpp> // must represent dimensions
+#include <example_interfaces/msg/int32_multi_array.hpp> //for arrays of ints
+#include <example_interfaces/msg/multi_array_dimension.hpp> // for dimensions
 
 #define SIZE 10 // size of the array we are sending
 
 int main(int argc,char **argv) {
   
-    rclcpp::init(argc,argv);
-    rclcpp::Node::SharedPtr nodeh; 
-    rclcpp::Rate rate(1);
+  rclcpp::init(argc,argv);
+  rclcpp::Node::SharedPtr nodeh; 
+  rclcpp::Rate rate(1);
 
-    nodeh = rclcpp::Node::make_shared("sendarray"); // create node
-    // create publisher
-    auto pubA = nodeh->create_publisher<example_interfaces::msg::Int32MultiArray>
+  nodeh = rclcpp::Node::make_shared("sendarray"); // create node
+  // create publisher
+  auto pubA = nodeh->create_publisher<example_interfaces::msg::Int32MultiArray>
       ("arrayint",10);
     
-    int value = 0;
-    example_interfaces::msg::Int32MultiArray toSend; // instance of message to send
+  int value = 0;
+  example_interfaces::msg::Int32MultiArray toSend; // message to send
 
-    // setup data structure to send
-    // one dimension
-    toSend.layout.dim.push_back(example_interfaces::msg::MultiArrayDimension()); 
-    toSend.layout.dim[0].size = SIZE; // first dimension size
-    toSend.layout.dim[0].stride = 1; // 1 because unidimensional
-    toSend.layout.dim[0].label = "row"; // arbitrary label
-    // make space for the serialized array
-    toSend.data.resize(toSend.layout.dim[0].size); 
+  // setup data structure to send one dimension
+  toSend.layout.dim.push_back(example_interfaces::msg::MultiArrayDimension()); 
+  toSend.layout.dim[0].size = SIZE; // first dimension size
+  toSend.layout.dim[0].stride = 1; // 1 because unidimensional
+  toSend.layout.dim[0].label = "row"; // arbitrary label
+  // make space for the serialized array
+  toSend.data.resize(toSend.layout.dim[0].size); 
     
-    while (rclcpp::ok()) {
-      // store some values
-      for (int i = 0; i < SIZE ; i++)
-	toSend.data[i] = i+value;
-      // publish
-      pubA->publish(toSend); 
-      value++;
-      rate.sleep();
-    }
-
+  while (rclcpp::ok()) {
+    // store some values
+    for (int i = 0; i < SIZE ; i++)
+      toSend.data[i] = i+value;
+    // publish
+    pubA->publish(toSend); 
+    value++;
+    rate.sleep();
+  }
 }

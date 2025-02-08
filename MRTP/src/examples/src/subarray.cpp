@@ -15,12 +15,13 @@ limitations under the License.
 */
 
 #include <rclcpp/rclcpp.hpp> // needed for basic functions
-#include <example_interfaces/msg/int32_multi_array.hpp> // we receive arrays of ints
+#include <example_interfaces/msg/int32_multi_array.hpp> // for arrays of ints
 
 rclcpp::Node::SharedPtr nodeh;
 
 // callback function to process incoming messages
-void arrayCallback(const example_interfaces::msg::Int32MultiArray::SharedPtr msg) {
+void arrayCallback(const example_interfaces::msg::Int32MultiArray::SharedPtr
+		                                                          msg) {
   RCLCPP_INFO(nodeh->get_logger(),"Received new message");
   // just print everything to the screen
   for(unsigned int i = 0 ; i <msg->data.size() ; i++)
@@ -33,7 +34,8 @@ int main(int argc,char ** argv) {
   nodeh = rclcpp::Node::make_shared("arraysubscriber"); // create node
 
   // create subscriber and register callback function
-  auto sub = nodeh->create_subscription<example_interfaces::msg::Int32MultiArray>
+  auto sub = nodeh->create_subscription
+                           <example_interfaces::msg::Int32MultiArray>
     ("arrayint",10,&arrayCallback);
   
   // receive all messages
