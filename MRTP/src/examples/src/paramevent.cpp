@@ -22,7 +22,7 @@ rclcpp::Node::SharedPtr nodeh;
 
 // callback function called when a parameter event is received
 void processEvent(const rcl_interfaces::msg::ParameterEvent::SharedPtr msg) {
-  if (msg->node == "/paramclient") {   // is this event for the current node?
+  if (msg->node == "/paramevent") {   // is this event for the current node?
     if ( msg->changed_parameters.size() > 0 ) { // any parameter changed?
       // scan all changed parameters
       for ( unsigned int i = 0 ; i < msg->changed_parameters.size() ; i++ )
@@ -44,7 +44,7 @@ void processEvent(const rcl_interfaces::msg::ParameterEvent::SharedPtr msg) {
 int main(int argc,char **argv) {
   
   rclcpp::init(argc,argv);
-  nodeh = rclcpp::Node::make_shared("paramclient");
+  nodeh = rclcpp::Node::make_shared("paramevent");
   // subscriber to be notified of changes to parameters
    auto sub = nodeh->create_subscription<rcl_interfaces::msg::ParameterEvent>
     ("parameter_events",10,&processEvent);
