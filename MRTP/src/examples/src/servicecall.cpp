@@ -17,13 +17,13 @@ limitations under the License.
 #include <rclcpp/rclcpp.hpp>
 #include <nav2_msgs/srv/save_map.hpp>
 
-rclcpp::Node::SharedPtr nodeh;
+
 
 
 int main(int argc,char **argv) {
 
     rclcpp::init(argc,argv);
-
+    rclcpp::Node::SharedPtr nodeh;
     nodeh = rclcpp::Node::make_shared("servicecall"); // create node
 
     // create client for service
