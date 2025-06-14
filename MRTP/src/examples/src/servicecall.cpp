@@ -17,9 +17,6 @@ limitations under the License.
 #include <rclcpp/rclcpp.hpp>
 #include <nav2_msgs/srv/save_map.hpp>
 
-
-
-
 int main(int argc,char **argv) {
 
     rclcpp::init(argc,argv);
