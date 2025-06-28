@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Stefano Carpin
+Copyright 2024 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,6 +44,13 @@ class Navigator : public rclcpp::Node {
 
 public:
 
+  using GoalHandleSpin = rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>;
+  using GoalHandleNavigate = rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>;
+  using GoalHandleFollowPath = rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>;
+  using GoalHandleFollowWaypoints = rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>;
+  using GoalHandleBackUp = rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>;
+  using GoalHandleComputePathToPose = rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>;
+  
   Navigator(bool=false,bool=false);
   
   ~Navigator();

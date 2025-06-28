@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Stefano Carpin
+Copyright 2024 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@ You may obtain a copy of the License at
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
-debugWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
@@ -102,10 +102,8 @@ bool Navigator::Spin(double spin_dist)
 
   current_executing = SPIN;
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::Spin>::SendGoalOptions();
-
-
   send_goal_options.goal_response_callback =
-    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::SharedPtr> >, this, _1);
+    std::bind(&Navigator::generic_goal_response_callback<GoalHandleSpin::SharedPtr>, this, _1); 
   
   send_goal_options.feedback_callback =
    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::Spin>::SharedPtr,
@@ -150,10 +148,18 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
 
   current_executing = GO_TO_POSE;
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions();
-  
+
+  send_goal_options.goal_response_callback =
+    [this](const GoalHandleNavigate::SharedPtr & goal_handle)
+    {
+      if (! goal_handle) {
+	RCLCPP_ERROR(this->get_logger(),"Goal rejetced");
+      }
+    };
+  /* 
   send_goal_options.goal_response_callback =
     std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr> >, this, _1);
-  
+  */
  send_goal_options.feedback_callback =
    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr,
 	     const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback> >, this, _1, _2);
@@ -198,8 +204,16 @@ bool Navigator::FollowPath(const nav_msgs::msg::Path::SharedPtr path)
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::FollowPath>::SendGoalOptions();
 
   send_goal_options.goal_response_callback =
+    [this](const GoalHandleFollowPath::SharedPtr & goal_handle)
+    {
+      if (! goal_handle) {
+	RCLCPP_ERROR(this->get_logger(),"Goal rejetced");
+      }
+    };
+  /*
+  send_goal_options.goal_response_callback =
     std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::SharedPtr> >, this, _1);
-  
+  */
   send_goal_options.feedback_callback =
     std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowPath>::SharedPtr,
 	      const std::shared_ptr<const nav2_msgs::action::FollowPath::Feedback> >, this, _1, _2);
@@ -242,8 +256,16 @@ bool Navigator::FollowWaypoints(const std::vector<geometry_msgs::msg::PoseStampe
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SendGoalOptions();
 
   send_goal_options.goal_response_callback =
+    [this](const GoalHandleFollowWaypoints::SharedPtr & goal_handle)
+    {
+      if (! goal_handle) {
+	RCLCPP_ERROR(this->get_logger(),"Goal rejetced");
+      }
+    };
+  /*
+  send_goal_options.goal_response_callback =
     std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::SharedPtr> >, this, _1);
-  
+  */
   send_goal_options.feedback_callback =
     std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::FollowWaypoints>::SharedPtr,
 	      const std::shared_ptr<const nav2_msgs::action::FollowWaypoints::Feedback> >, this, _1, _2);
@@ -287,10 +309,18 @@ bool Navigator::Backup(double backup_dist,double backup_speed)
 
   current_executing = BACKUP;
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::BackUp>::SendGoalOptions();
-  
+
+   send_goal_options.goal_response_callback =
+      [this](const GoalHandleBackUp::SharedPtr & goal_handle)
+      {
+	if (! goal_handle) {
+	  RCLCPP_ERROR(this->get_logger(),"Goal rejetced");
+	}
+      };
+   /*
   send_goal_options.goal_response_callback =
     std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::SharedPtr> >, this, _1);
-  
+   */
   send_goal_options.feedback_callback =
     std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::BackUp>::SharedPtr,
 	      const std::shared_ptr<const nav2_msgs::action::BackUp::Feedback> >, this, _1, _2);  
@@ -339,13 +369,13 @@ bool Navigator::get_path_internal(const geometry_msgs::msg::Pose::SharedPtr pose
   
   current_executing = COMPUTE_PATH;    
   auto goal_msg = nav2_msgs::action::ComputePathToPose::Goal();
-  goal_msg.pose.pose.position = pose->position;
-  goal_msg.pose.pose.orientation = pose->orientation;
+  goal_msg.goal.pose.position = pose->position;
+  goal_msg.goal.pose.orientation = pose->orientation;
 
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::ComputePathToPose>::SendGoalOptions();
   
   send_goal_options.goal_response_callback =
-    std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::SharedPtr> >, this, _1);
+    std::bind(&Navigator::generic_goal_response_callback<GoalHandleComputePathToPose::SharedPtr>, this, _1);
   send_goal_options.feedback_callback =
     std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::ComputePathToPose>::SharedPtr,
 	      const std::shared_ptr<const nav2_msgs::action::ComputePathToPose::Feedback> >, this, _1, _2);  
@@ -422,7 +452,8 @@ bool Navigator::IsTaskComplete() {
 template<typename T>
 void Navigator::check_complete(T future) {
   using namespace std::chrono_literals;
-  if ( rclcpp::spin_until_future_complete(this->get_node_base_interface(),future,0.1s) == rclcpp::executor::FutureReturnCode::SUCCESS) {
+  //if ( rclcpp::spin_until_future_complete(this->get_node_base_interface(),future,0.1s) == rclcpp::executor::FutureReturnCode::SUCCESS) {
+  if ( rclcpp::spin_until_future_complete(this->get_node_base_interface(),future,0.1s) == rclcpp::FutureReturnCode::SUCCESS) {
     auto result = future.get();
     status = result.code;
   }
@@ -627,11 +658,10 @@ void Navigator::amcl_pose_callback(const geometry_msgs::msg::PoseWithCovarianceS
 
 
 template<typename T>
-void Navigator::generic_goal_response_callback(T future)
+void Navigator::generic_goal_response_callback(T goal_handle)
 {
   if (debug) {
     RCLCPP_INFO(this->get_logger(), "In task %s response callback",server_names[current_executing]);
-    auto goal_handle = future.get();
     if (!goal_handle) {
       RCLCPP_ERROR(this->get_logger(), "Goal was rejected by server");
     } else {
