@@ -1,20 +1,41 @@
-Humble
-ros-humble-navigation2
-ros-humble-nav2-bringup
-ros-humble-turtlebot3-gazebo
-
-Iron
-ros-iron-navigation2
-ros-iron-nav2-bringup
-ros-humble-turtlebot3-gazebo
-
-To get rid of the warnings:
-pip install setuptools==58.2.0
-
 
 Jazzy
 Start with https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html and install ros-jazzy-desktop
 
 Then add the following packages
+ros-jazzy-navigation2 
+ros-jazzy-nav2-bringup
+
+For Turtlebot, according to
+https://github.com/turtlebot/turtlebot4/issues/412
+Turtlebot is already supported and integrated with Rviz/Gazebo. However, an out of the box installation crashes gazebo. Both tb3 and tb4 work with headless:=True (i.e., rviz visualization only)
+
+Then follow https://turtlebot.github.io/turtlebot4-user-manual/software/turtlebot4_simulator.html
+and run
+
+sudo apt-get install curl
+sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+sudo apt-get update
+sudo apt-get install gz-harmonic
+
+Note: installed this way, gz sim fails. The following fixes the problem
+echo 'export QT_QPA_PLATFORM=xcb' >> ~/.bashrc
+source ~/.bashrc
+
+Note that https://turtlebot.github.io/turtlebot4-user-manual/software/turtlebot4_simulator.html#dev-tools
+suggests to run
+sudo apt install ros-jazzy-turtlebot4-simulator ros-jazzy-irobot-create-nodes
+but as of 11/13/2024 it does not work (packages not found)
 
 
+sudo apt install ros-jazzy-turtlebot3-*
+sudo apt install ros-jazzy-turtlebot4-*
+
+
+For the husky simulation in jazzy, follow
+https://docs.clearpathrobotics.com/docs/ros/
+sudo apt-get install ros-jazzy-clearpath-simulator
+
+add https://wiki.ros.org/ClearpathRobotics/Packages
+and install ros-jazzy-clearpath-diagnostics
