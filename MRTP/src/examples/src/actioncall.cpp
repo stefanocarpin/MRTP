@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Stefano Carpin
+Copyright 2025 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ public:
   ActionCaller() : Node("actioncaller") {
     spin_client = rclcpp_action::create_client<nav2_msgs::action::Spin>
       (this,"spin");
-    spinning = false;
+    rotating = false;
   }
 
-  void Spin(double target_yaw) {
+  void RotateRobot(double target_yaw) {
     using namespace std::placeholders;
     spin_client->wait_for_action_server();
     auto goal_message = nav2_msgs::action::Spin::Goal();
@@ -51,18 +51,18 @@ public:
 				       send_goal_future);
   }
 
-  bool isSpinning() { return spinning; }
+  bool RobotIsRotating() { return rotating; }
   
 private:
   rclcpp_action::Client<nav2_msgs::action::Spin>::SharedPtr spin_client;
-  bool spinning;
+  bool rotating;
   void response_callback(const GoalHandleSpin::SharedPtr & goal_handle)
   {
     if (!goal_handle) {
-      RCLCPP_ERROR(this->get_logger(), "Goal was rejected by spin server");
+      RCLCPP_ERROR(this->get_logger(), "Goal was rejected by spin action server");
     } else {
-      RCLCPP_INFO(this->get_logger(), "Goal accepted by spin server");
-      spinning = true;
+      RCLCPP_INFO(this->get_logger(), "Goal accepted by spin action server");
+      rotating = true;
     }
   }
 
@@ -70,8 +70,8 @@ private:
 		       <nav2_msgs::action::Spin>::WrappedResult & result)
   {
     if (int(result.code) == action_msgs::msg::GoalStatus::STATUS_SUCCEEDED)
-      RCLCPP_INFO(get_logger(),"Spin completed with success");
-    spinning = false;
+      RCLCPP_INFO(get_logger(),"Rotation completed with success");
+    rotating = false;
   }
   
   void feedback_callback(rclcpp_action::ClientGoalHandle
@@ -87,8 +87,8 @@ int main(int argc,char **argv) {
 
   rclcpp::init(argc,argv); // initialize the ROS subsystem
   ActionCaller node; // create node
-  node.Spin(2.0); // turn ~ 114 degrees
-  while ( node.isSpinning() )
+  node.RotateRobot(2.0); // turn ~ 114 degrees
+  while ( node.RobotIsRotating() )
     rclcpp::spin_some(node.get_node_base_interface());
   rclcpp::shutdown(); // shutdown ROS
   return 0;
