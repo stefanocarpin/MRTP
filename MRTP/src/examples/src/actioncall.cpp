@@ -59,9 +59,7 @@ private:
   void response_callback(const GoalHandleSpin::SharedPtr & goal_handle)
   {
     if (!goal_handle) {
-      RCLCPP_ERROR(this->get_logger(), "Goal was rejected by spin action server");
-    } else {
-      RCLCPP_INFO(this->get_logger(), "Goal accepted by spin action server");
+      RCLCPP_ERROR(this->get_logger(), "Goal was rejected by  action server");
       rotating = true;
     }
   }
