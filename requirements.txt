@@ -1,0 +1,6 @@
+# python package dependencies
+typing_extensions
+# ROS2 required
+catkin_pkg
+empy
+lark
