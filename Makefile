@@ -44,7 +44,7 @@ bash:
 clean:
 	rm -rf build/ install/ log/
 
-gazebo:
-	ros2 launch clearpath_gz simulation.launch.py world:=orchard
+husky:
+	ros2 launch clearpath_gz simulation.launch.py
 
-.PHONY: repo-init shell build-image vnc bash clean gazebo
+.PHONY: repo-init shell build-image vnc bash clean husky
