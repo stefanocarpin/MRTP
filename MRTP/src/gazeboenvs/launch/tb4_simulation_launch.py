@@ -14,10 +14,6 @@
 
 """This is all-in-one launch script intended for use by nav2 developers."""
 
-# This is a slighlty modified version to remove rviz and load a local copy of waffle
-# The original version was found in the package ros-jazzy-nav2-bringup
-
-
 import os
 import tempfile
 
@@ -43,6 +39,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     # Get the launch directory
     bringup_dir = get_package_share_directory('nav2_bringup')
+    MRTP_dir = get_package_share_directory('gazeboenvs')
     launch_dir = os.path.join(bringup_dir, 'launch')
     # This checks that tb4 exists needed for the URDF / simulation files.
     # If not using TB4, its safe to remove.
@@ -92,7 +89,7 @@ def generate_launch_description():
     )
 
     declare_slam_cmd = DeclareLaunchArgument(
-        'slam', default_value='True', description='Whether run a SLAM'
+        'slam', default_value='False', description='Whether run a SLAM'
     )
 
     declare_map_yaml_cmd = DeclareLaunchArgument(
@@ -103,13 +100,14 @@ def generate_launch_description():
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='True',
+        default_value='true',
         description='Use simulation (Gazebo) clock if true',
     )
 
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
-        default_value=os.path.join(bringup_dir, 'params', 'nav2_params.yaml'),
+        #default_value=os.path.join(bringup_dir, 'params', 'nav2_params.yaml'),
+        default_value = os.path.join(MRTP_dir,'params','nav2_params_tb4.yaml'),
         description='Full path to the ROS2 parameters file to use for all launched nodes',
     )
 
@@ -150,11 +148,11 @@ def generate_launch_description():
     )
 
     declare_use_rviz_cmd = DeclareLaunchArgument(
-        'use_rviz', default_value='False', description='Whether to start RVIZ'
+        'use_rviz', default_value='True', description='Whether to start RVIZ'
     )
 
     declare_simulator_cmd = DeclareLaunchArgument(
-        'headless', default_value='False', description='Whether to execute gzclient)'
+        'headless', default_value='True', description='Whether to execute gzclient)'
     )
 
     declare_world_cmd = DeclareLaunchArgument(
