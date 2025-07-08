@@ -1,4 +1,4 @@
-This package is a C++ porting of the Simple Commander API provided with Nav2 and implemented in Python. See https://navigation.ros.org/commander_api/ for a more thorough discussion of "navigation as a library". This porting targets the Foxy distribution. Whenever possible, we follow the same API and also the internal implementation of the original Python implementation. 
+This package is a C++ porting of the Simple Commander API provided with Nav2 and implemented in Python. See https://docs.nav2.org/commander_api/index.html for a more thorough discussion of "navigation as a library". This porting targets the Foxy distribution. Whenever possible, we follow the same API and also the internal implementation of the original Python implementation. 
 
 <b>Porting notes</b></br>
 The C++ <code>Navigator</code> class is the equivalent of the Python <code>BasicNavigator</code> class. The following methods have been ported and offer the same functionalities (modulo some minor changes described below). 
