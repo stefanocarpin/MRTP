@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Stefano Carpin
+Copyright 2025 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,16 +19,16 @@ limitations under the License.
 #include <iostream>
 #include <memory>
 
-/* This file tests all functionalities in the navigation library */
-
+/* Tests all functionalities in the navigation library */
 
 int main(int argc,char **argv) {
  
   rclcpp::init(argc,argv); 
-  Navigator navigator(true); // create node with no debug info and no verbose messages
+  Navigator navigator(true); // create node with debug info only
 
   // First test initialization methods
-  geometry_msgs::msg::Pose::SharedPtr init = std::make_shared<geometry_msgs::msg::Pose>();
+  geometry_msgs::msg::Pose::SharedPtr init =
+                            std::make_shared<geometry_msgs::msg::Pose>();
   init->position.x = -2;
   init->position.y = -0.5;
   init->orientation.w = 1;
@@ -40,8 +40,10 @@ int main(int argc,char **argv) {
   navigator.Spin(); // test Spin action
   while ( ! navigator.IsTaskComplete() ) {  // test IsTaskComplete
     auto feedback_ptr = navigator.GetFeedback(); // test GetFeedback
-    auto ptr_spin = std::static_pointer_cast<const nav2_msgs::action::Spin::Feedback>(feedback_ptr);
-    std::cout << "Feedback: angular traveled " << ptr_spin->angular_distance_traveled << std::endl;
+    auto ptr_spin = std::static_pointer_cast
+                     <const nav2_msgs::action::Spin::Feedback>(feedback_ptr);
+    std::cout << "Feedback: angular traveled " <<
+                  ptr_spin->angular_distance_traveled << std::endl;
      
   }
   auto result = navigator.GetResult(); // test GetResult
@@ -52,19 +54,21 @@ int main(int argc,char **argv) {
   
   navigator.Spin(-1.57); // execute Spin action again to cancel it
   int i = 0;
-  while ( ( ! navigator.IsTaskComplete() ) && (i < 3) ) { // wait for 3 feedback messages and then cancel
+  // wait for 3 feedback messages and then cancel
+  while ( ( ! navigator.IsTaskComplete() ) && (i < 3) ) { 
     i++;
   }
   navigator.CancelTask(); // test CancelTask
   result = navigator.GetResult(); 
   if ( result == rclcpp_action::ResultCode::CANCELED )
-    std::cout << "Spin action was canceled as intended" << std::endl;
+    std::cout <<"Spin action was canceled as intended" << std::endl;
   else
-    std::cout << "Cancel task did not return the expected result." << std::endl;
+    std::cout <<"Cancel task did not return the expected result." << std::endl;
   
 
   // test GoToPose
-  geometry_msgs::msg::Pose::SharedPtr goal_pos = std::make_shared<geometry_msgs::msg::Pose>();
+  geometry_msgs::msg::Pose::SharedPtr
+                       goal_pos = std::make_shared<geometry_msgs::msg::Pose>();
   goal_pos->position.x = 2;
   goal_pos->position.y = 1;
   goal_pos->orientation.w = 1;
@@ -104,12 +108,18 @@ int main(int argc,char **argv) {
     std::cout << "Backup goal was not achieved" << std::endl;
 
   // test GetGlobalCostmap
-  std::shared_ptr<nav2_msgs::msg::Costmap> global_costmap = navigator.GetGlobalCostmap();
-  std::cout << "Global costmap has dimensions " << global_costmap->metadata.size_x << "," << global_costmap->metadata.size_y << std::endl;
+  std::shared_ptr<nav2_msgs::msg::Costmap> global_costmap =
+                                           navigator.GetGlobalCostmap();
+  std::cout << "Global costmap has dimensions " <<
+                    global_costmap->metadata.size_x << "," <<
+                    global_costmap->metadata.size_y << std::endl;
 
   // test GetLocalCostmap
-  std::shared_ptr<nav2_msgs::msg::Costmap> local_costmap = navigator.GetLocalCostmap();
-  std::cout << "Global costmap has dimensions " << local_costmap->metadata.size_x << "," << local_costmap->metadata.size_y << std::endl;
+  std::shared_ptr<nav2_msgs::msg::Costmap> local_costmap =
+                                           navigator.GetLocalCostmap();
+  std::cout << "Global costmap has dimensions " <<
+                             local_costmap->metadata.size_x << "," <<
+                             local_costmap->metadata.size_y << std::endl;
 
   // test GetPath
   goal_pos = std::make_shared<geometry_msgs::msg::Pose>();
@@ -124,7 +134,8 @@ int main(int argc,char **argv) {
   result = navigator.GetResult(); 
   if ( result == rclcpp_action::ResultCode::SUCCEEDED ) {
     std::cout << "GetPath action succeeded" << std::endl;
-    std::cout << "Received a path with " << path->poses.size() << " intermediate poses" << std::endl;
+    std::cout << "Received a path with " << path->poses.size() <<
+                                     " intermediate poses" << std::endl;
   }
   else
     std::cout << "GetPath goal was not achieved" << std::endl;
