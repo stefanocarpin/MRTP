@@ -59,7 +59,7 @@ Navigator::Navigator(bool debug,bool verbose) : rclcpp::Node("navigator")
   feedback_ptr = nullptr;
   
   if (debug)
-    RCLCPP_INFO(get_logger(),"Created instance of Navigator...");
+    RCLCPP_INFO(get_logger(),"Created instance of Navigator");
 }
 
 Navigator::~Navigator() {
@@ -80,14 +80,14 @@ void Navigator::SetInitialPose(const geometry_msgs::msg::Pose::SharedPtr pose)
 void Navigator::WaitUntilNav2Active()
 {
   if (debug)
-    RCLCPP_INFO(this->get_logger(),"Waiting for Nav2");
+    RCLCPP_INFO(this->get_logger(),"Waiting for Nav2 to activate...");
   
   wait_for_node_to_activate("amcl");
   wait_for_initial_pose();
   wait_for_node_to_activate("bt_navigator");
 
   if (debug)
-    RCLCPP_INFO(this->get_logger(),"Nav2 is ready");
+    RCLCPP_INFO(this->get_logger(),"Nav2 is ready!");
 }
 
 
@@ -636,16 +636,18 @@ void Navigator::wait_for_node_to_activate(const std::string& node_name)
   rclcpp::Client<lifecycle_msgs::srv::GetState>::SharedPtr client =
     this->create_client<lifecycle_msgs::srv::GetState>(node_service);
 
-  while (! client->wait_for_service(1s)) 
+  while (! client->wait_for_service(10s)) 
     RCLCPP_INFO(this->get_logger(),"Waiting for %s to be available",node_name.c_str());
 
   auto request = std::make_shared<lifecycle_msgs::srv::GetState::Request>();
   std::string state = "unknown";
   while ( state != "active" ) {
-    auto future = client->async_send_request(request);
-    rclcpp::spin_until_future_complete(this->get_node_base_interface(),future);
-    if ( future.get() ) {
-      state = future.get()->current_state.label;
+    auto response = client->async_send_request(request);
+    if ( rclcpp::spin_until_future_complete(this->get_node_base_interface(),response) ==
+	 rcpcpp::FutureReturnCode::SUCCESS ) 
+      state = response.get()->current_state.label;
+    else
+      RCLCPP_INFO(this->get_logger(),"Server %s did not respond to get_state",node_name);
     }
   }
 }
