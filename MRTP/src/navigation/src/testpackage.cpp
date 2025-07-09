@@ -42,7 +42,7 @@ int main(int argc,char **argv) {
     auto feedback_ptr = navigator.GetFeedback(); // test GetFeedback
     auto ptr_spin = std::static_pointer_cast
                      <const nav2_msgs::action::Spin::Feedback>(feedback_ptr);
-    std::cout << "Feedback: angular traveled " <<
+    std::cout << "Feedback: angular distance traveled " <<
                   ptr_spin->angular_distance_traveled << std::endl;
      
   }
@@ -75,7 +75,11 @@ int main(int argc,char **argv) {
   // move to new pose
   navigator.GoToPose(goal_pos);
   while ( ! navigator.IsTaskComplete() ) {
-    
+	  auto feedback_ptr = navigator.GetFeedback();
+	  auto ptr_gotopose = std::static_pointer_cast
+		  <const nav2_msgs::action::NavigateToPose::Feedback>(feedback_ptr);
+	  std::cout << "Distance remaining : "
+		    << ptr_gotopose->distance_remaining << std::endl;
   }
   result = navigator.GetResult(); 
   if ( result == rclcpp_action::ResultCode::SUCCEEDED )
@@ -97,7 +101,7 @@ int main(int argc,char **argv) {
 
   
   // test Backup
-  navigator.Backup(); // use default distance and speed
+  navigator.Backup(0.1,0.1); // backup 0.1m at 0.1 m/s 
   while ( ! navigator.IsTaskComplete() ) {
     
   }

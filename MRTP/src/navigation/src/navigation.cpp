@@ -45,9 +45,9 @@ Navigator::Navigator(bool debug,bool verbose) : rclcpp::Node("navigator")
   spin_client = rclcpp_action::create_client<nav2_msgs::action::Spin>(this,"spin");
   nav_to_pose_client = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(this,"navigate_to_pose");
   follow_path_client = rclcpp_action::create_client<nav2_msgs::action::FollowPath>(this,"follow_path");
-  backup_client = rclcpp_action::create_client<nav2_msgs::action::BackUp>(this,"back_up");
+  backup_client = rclcpp_action::create_client<nav2_msgs::action::BackUp>(this,"backup");
   compute_path_to_pose_client = rclcpp_action::create_client<nav2_msgs::action::ComputePathToPose>(this,"compute_path_to_pose");
-  follow_waypoints_client = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(this,"FollowWaypoints");
+  follow_waypoints_client = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(this,"follow_waypoints");
   
   clear_global_costmap_srv = create_client<nav2_msgs::srv::ClearEntireCostmap>("/global_costmap/clear_entirely_global_costmap");
   clear_local_costmap_srv = create_client<nav2_msgs::srv::ClearEntireCostmap>("/local_costmap/clear_entirely_local_costmap");
@@ -119,14 +119,18 @@ bool Navigator::Spin(double spin_dist)
   if ( goal_handle != NULL ) {
     if ( goal_handle->get_status() != action_msgs::msg::GoalStatus::STATUS_ACCEPTED ) {
       if (debug)
-	RCLCPP_INFO(this->get_logger(),"Spin request was rejected");
+	RCLCPP_INFO(this->get_logger(),"Spin request was not accepted");
       current_executing = NONE;
       return false;
+    }
+    else {
+      if (debug)
+	RCLCPP_INFO(this->get_logger(),"Spin request was accepted");
     }
   }
   else {
     if (debug)
-      RCLCPP_INFO(this->get_logger(),"Spin request was rejected");
+      RCLCPP_INFO(this->get_logger(),"Spin request was not accepted");
     current_executing = NONE;
     return false;
   }
@@ -144,7 +148,8 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
   auto goal_msg = nav2_msgs::action::NavigateToPose::Goal();
   goal_msg.pose.pose.position = pose->position;
   goal_msg.pose.pose.orientation = pose->orientation;
-  goal_msg.behavior_tree = "";
+  goal_msg.pose.header.frame_id = "map";  
+  goal_msg.pose.header.stamp = get_clock()->now();
 
   current_executing = GO_TO_POSE;
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions();
@@ -153,13 +158,13 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
     [this](const GoalHandleNavigate::SharedPtr & goal_handle)
     {
       if (! goal_handle) {
-	RCLCPP_ERROR(this->get_logger(),"Goal rejetced");
+	RCLCPP_ERROR(this->get_logger(),"Goal rejected");
       }
     };
-  /* 
+/*
   send_goal_options.goal_response_callback =
     std::bind(&Navigator::generic_goal_response_callback<std::shared_future<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr> >, this, _1);
-  */
+*/ 
  send_goal_options.feedback_callback =
    std::bind(&Navigator::generic_feedback_callback<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr,
 	     const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback> >, this, _1, _2);
@@ -173,9 +178,13 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
  if (goal_handle != NULL ) {
    if ( goal_handle->get_status() != action_msgs::msg::GoalStatus::STATUS_ACCEPTED ) {
      if (debug)
-       RCLCPP_INFO(this->get_logger(),"GoToPose request was rejected");
+       RCLCPP_INFO(this->get_logger(),"GoToPose request was not accepted");
      current_executing = NONE;
      return false;
+   }
+   else {
+     if (debug)
+       RCLCPP_INFO(this->get_logger(),"GoToPose request was accepted");
    }
  }
  else {
@@ -184,8 +193,6 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
    current_executing = NONE;    
    return false;
  }
- if (debug)
-   RCLCPP_INFO(this->get_logger(),"GoToPose request was accepted.");
  future_go_to_pose = nav_to_pose_client->async_get_result(goal_handle);
  
  return true;
@@ -207,7 +214,7 @@ bool Navigator::FollowPath(const nav_msgs::msg::Path::SharedPtr path)
     [this](const GoalHandleFollowPath::SharedPtr & goal_handle)
     {
       if (! goal_handle) {
-	RCLCPP_ERROR(this->get_logger(),"Goal rejetced");
+	RCLCPP_ERROR(this->get_logger(),"Goal rejected");
       }
     };
   /*
@@ -259,7 +266,7 @@ bool Navigator::FollowWaypoints(const std::vector<geometry_msgs::msg::PoseStampe
     [this](const GoalHandleFollowWaypoints::SharedPtr & goal_handle)
     {
       if (! goal_handle) {
-	RCLCPP_ERROR(this->get_logger(),"Goal rejetced");
+	RCLCPP_ERROR(this->get_logger(),"Goal rejected");
       }
     };
   /*
@@ -314,7 +321,7 @@ bool Navigator::Backup(double backup_dist,double backup_speed)
       [this](const GoalHandleBackUp::SharedPtr & goal_handle)
       {
 	if (! goal_handle) {
-	  RCLCPP_ERROR(this->get_logger(),"Goal rejetced");
+	  RCLCPP_ERROR(this->get_logger(),"Goal rejected");
 	}
       };
    /*
@@ -371,6 +378,8 @@ bool Navigator::get_path_internal(const geometry_msgs::msg::Pose::SharedPtr pose
   auto goal_msg = nav2_msgs::action::ComputePathToPose::Goal();
   goal_msg.goal.pose.position = pose->position;
   goal_msg.goal.pose.orientation = pose->orientation;
+  goal_msg.goal.header.frame_id = "map";
+  goal_msg.goal.header.stamp = get_clock()->now();
 
   auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::ComputePathToPose>::SendGoalOptions();
   
@@ -644,12 +653,13 @@ void Navigator::wait_for_node_to_activate(const std::string& node_name)
   while ( state != "active" ) {
     auto response = client->async_send_request(request);
     if ( rclcpp::spin_until_future_complete(this->get_node_base_interface(),response) ==
-	 rcpcpp::FutureReturnCode::SUCCESS ) 
+	 rclcpp::FutureReturnCode::SUCCESS ) 
       state = response.get()->current_state.label;
     else
-      RCLCPP_INFO(this->get_logger(),"Server %s did not respond to get_state",node_name);
-    }
-  }
+      RCLCPP_INFO(this->get_logger(),"Server %s did not respond to get_state",node_name.c_str());
+   }
+   if (debug)
+     RCLCPP_INFO(this->get_logger(),"%s active",node_name.c_str());
 }
 
 void Navigator::amcl_pose_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) {
