@@ -68,7 +68,7 @@ int main(int argc,char **argv) {
 
   // test GoToPose
   geometry_msgs::msg::Pose::SharedPtr
-                       goal_pos = std::make_shared<geometry_msgs::msg::Pose>();
+                      goal_pos = std::make_shared<geometry_msgs::msg::Pose>();
   goal_pos->position.x = 2;
   goal_pos->position.y = 1;
   goal_pos->orientation.w = 1;
@@ -77,7 +77,7 @@ int main(int argc,char **argv) {
   while ( ! navigator.IsTaskComplete() ) {
 	  auto feedback_ptr = navigator.GetFeedback();
 	  auto ptr_gotopose = std::static_pointer_cast
-		  <const nav2_msgs::action::NavigateToPose::Feedback>(feedback_ptr);
+	    <const nav2_msgs::action::NavigateToPose::Feedback>(feedback_ptr);
 	  std::cout << "Distance remaining : "
 		    << ptr_gotopose->distance_remaining << std::endl;
   }
