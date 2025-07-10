@@ -47,4 +47,7 @@ clean:
 husky:
 	ros2 launch clearpath_gz simulation.launch.py
 
+turtlebot:
+	ros2 launch turtlebot4_gz_bringup turtlebot4_gz.launch.py
+
 .PHONY: repo-init shell build-image vnc bash clean husky

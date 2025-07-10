@@ -20,7 +20,12 @@ Currently, we support `husky` and `turtlebot`, as desired robot environments.
 We recommend `turtlebot` if you're just wanting to play around in the ROS2 environment without any simulation.
 
 You can pull and run the image with `make bash ROBOT=<your_desired_robot>` and may now follow along with the book from this point.
+If you want to run multiple shells within the container, run `make shell ROBOT=<your_desired_robot>` from outside after you've spawned the container.
 
 ### Husky
 For Clearpath Husky, we've provided a script to spawn the Gazebo simulation using their provided environment.
 To run, execute `make husky` once inside your container.
+
+### Turtlebot
+For Turtlebot4, we've provided a script to spawn the Gazebo simulation using their provided environment.
+To run, execute `make turtlebot` once inside your container.

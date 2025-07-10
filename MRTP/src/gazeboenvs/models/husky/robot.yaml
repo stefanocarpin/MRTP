@@ -44,8 +44,8 @@ sensors:
         laser_frame_id: lidar2d_0_laser
         ip_address: 192.168.131.20
         ip_port: 10940
-        angle_min: -3.141592653589793
-        angle_max: 3.141592653589793
+        angle_min: -1.07
+        angle_max: 1.07
   gps:
     - model: swiftnav_duro
       urdf_enabled: true

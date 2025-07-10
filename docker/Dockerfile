@@ -4,7 +4,7 @@ FROM ghcr.io/sloretz/ros:${ROS_DISTRO}-desktop-full AS base
 
 # any utilities you want
 RUN apt-get update && apt-get install -y git wget python3-full python3-pip vim net-tools netcat-traditional tmux \
-    ros-${ROS_DISTRO}-ros-gz ros-${ROS_DISTRO}-nav2-bringup ros-${ROS_DISTRO}-nav2-msgs ros-${ROS_DISTRO}-navigation2 ros-${ROS_DISTRO}-topic-tools
+    ros-${ROS_DISTRO}-ros-gz ros-${ROS_DISTRO}-nav2-bringup ros-${ROS_DISTRO}-nav2-msgs ros-${ROS_DISTRO}-navigation2 ros-${ROS_DISTRO}-topic-tools ros-dev-tools
 
 # install python requirements
 COPY ../requirements.txt /requirements.txt
@@ -63,5 +63,19 @@ RUN echo "source ${CLEARPATH_WS}/install/setup.bash" >> /root/.bashrc
 
 
 FROM base AS turtlebot
+ARG TURTLEBOT_WS=/root/turtlebot4_ws
 
-RUN apt-get update && apt-get install -y ros-${ROS_DISTRO}-turtlebot4-simulator
+RUN apt-get update && apt-get install -y ros-${ROS_DISTRO}-turtlebot4-simulator ros-${ROS_DISTRO}-irobot-create-nodes
+
+RUN mkdir -p ${TURTLEBOT_WS}/src
+
+RUN cd ${TURTLEBOT_WS}/src && \
+    git clone https://github.com/turtlebot/turtlebot4_simulator.git -b jazzy
+
+RUN cd ${TURTLEBOT_WS} && rosdep update && rosdep install --from-path src -yi
+
+RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
+    cd ${TURTLEBOT_WS} && \
+    colcon build --symlink-install
+
+RUN echo "source ${TURTLEBOT_WS}/install/setup.bash" >> /root/.bashrc
