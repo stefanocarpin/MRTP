@@ -148,11 +148,11 @@ def generate_launch_description():
     )
 
     declare_use_rviz_cmd = DeclareLaunchArgument(
-        'use_rviz', default_value='True', description='Whether to start RVIZ'
+        'use_rviz', default_value='False', description='Whether to start RVIZ'
     )
 
     declare_simulator_cmd = DeclareLaunchArgument(
-        'headless', default_value='True', description='Whether to execute gzclient)'
+        'headless', default_value='False', description='Whether to execute gzclient)'
     )
 
     declare_world_cmd = DeclareLaunchArgument(
