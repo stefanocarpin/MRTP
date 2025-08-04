@@ -146,6 +146,7 @@ bool Navigator::GoToPose(const geometry_msgs::msg::Pose::SharedPtr pose)
     RCLCPP_INFO(get_logger(),"Waiting for NavigateToGoal action server");
   nav_to_pose_client->wait_for_action_server();
   auto goal_msg = nav2_msgs::action::NavigateToPose::Goal();
+  goal_msg.pose.header.frame_id = "map";
   goal_msg.pose.pose.position = pose->position;
   goal_msg.pose.pose.orientation = pose->orientation;
   goal_msg.pose.header.frame_id = "map";  
