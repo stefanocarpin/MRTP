@@ -96,4 +96,4 @@ API Differences<br>
 
 The following methods have <i>not</i> been ported because the corresponding action servrs are not part of the Foxy distribution: <code>goThroughPose</code>, <code>assistedTeleop</code>, <code>getPathThroughPoses</code>, <code>smoothPath</code>.
 
-  The file <code>testpackage.cpp</code> shows how each method can be called. To test it, follow the same Gazebo/RViz setup described in https://navigation.ros.org/getting_started/index.html
+  The file <code>testpackage.cpp</code> shows how each method can be called. To test it, follow the same Gazebo/RViz setup described in https://docs.nav2.org/getting_started/index.html

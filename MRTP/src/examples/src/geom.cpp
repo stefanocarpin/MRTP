@@ -19,7 +19,7 @@ limitations under the License.
 #include <tf2/LinearMath/Matrix3x3.h>
 #include <tf2/LinearMath/Transform.h>
 #include <tf2/LinearMath/Vector3.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 
 int main(int argc,char ** argv) {

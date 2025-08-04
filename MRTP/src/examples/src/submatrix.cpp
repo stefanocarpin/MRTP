@@ -15,13 +15,14 @@ limitations under the License.
 */
 
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/int32_multi_array.hpp>
+#include <example_interfaces/msg/int32_multi_array.hpp>
 #include <vector>
 
 rclcpp::Node::SharedPtr nodeh;
 
 // callback function called when a matrix is received
-void matrixCallback(const std_msgs::msg::Int32MultiArray::SharedPtr msg) {
+void matrixCallback(const example_interfaces::msg::Int32MultiArray::SharedPtr
+		                                                         msg) {
   // first extracts dimensions from message 
   int nrows =  msg->layout.dim[0].size;
   int ncols =  msg->layout.dim[1].size;
@@ -40,7 +41,8 @@ int main(int argc,char ** argv) {
   rclcpp::init(argc,argv);
   nodeh = rclcpp::Node::make_shared("matrixsubscriber"); // create node
   // create subscriber and register callback function
-  auto sub = nodeh->create_subscription<std_msgs::msg::Int32MultiArray>
+  auto sub =
+    nodeh->create_subscription<example_interfaces::msg::Int32MultiArray>
     ("matrixint",10,&matrixCallback);
 
   rclcpp::spin(nodeh);

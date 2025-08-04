@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Stefano Carpin
+Copyright 2024 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ limitations under the License.
 #include <geometry_msgs/msg/pose.hpp>
 #include <tf2/LinearMath/Quaternion.h>
 #include <nav_msgs/msg/odometry.hpp>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 tf2::Quaternion q;
 bool valid;
@@ -36,7 +36,7 @@ int main(int argc,char ** argv) {
   nodeh = rclcpp::Node::make_shared("convert");
 
   auto sub = nodeh->create_subscription<nav_msgs::msg::Odometry>
-                                  ("p2dx/odom",10,&odomReceived);
+                                  ("odom",10,&odomReceived);
     
   valid = false;
   double roll, pitch, yaw;

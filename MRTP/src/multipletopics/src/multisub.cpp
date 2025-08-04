@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Stefano Carpin
+Copyright 2024 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,21 +15,21 @@ limitations under the License.
 */
 
 #include <rclcpp/rclcpp.hpp> // needed for basic functions
-#include <std_msgs/msg/int32.hpp> // to receive integers
-#include <std_msgs/msg/string.hpp> // to receive strings
+#include <example_interfaces/msg/int32.hpp> // to receive integers
+#include <example_interfaces/msg/string.hpp> // to receive strings
 
 rclcpp::Node::SharedPtr nodeh;
 
 // callback function called every time a message is received from the
 // topic "stringm"
-void stringCallback(const std_msgs::msg::String::SharedPtr msg) {
+void stringCallback(const example_interfaces::msg::String::SharedPtr msg) {
   // print received string to the screen
   RCLCPP_INFO(nodeh->get_logger(),"Received string: %s",msg->data.c_str());
 }
 
 // callback function called every time a message is received from the
 // topic "intm"
-void intCallback(const std_msgs::msg::Int32::SharedPtr msg) {
+void intCallback(const example_interfaces::msg::Int32::SharedPtr msg) {
   // print received integer to the screen
   RCLCPP_INFO(nodeh->get_logger(),"Received integer: %d",msg->data);
 }
@@ -38,14 +38,14 @@ void intCallback(const std_msgs::msg::Int32::SharedPtr msg) {
 int main(int argc,char **argv) {
 
   rclcpp::init(argc,argv); // initialize ROS subsystem
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subs;
-  rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr subi;
+  rclcpp::Subscription<example_interfaces::msg::String>::SharedPtr subs;
+  rclcpp::Subscription<example_interfaces::msg::Int32>::SharedPtr subi;
   nodeh = rclcpp::Node::make_shared("multisub"); // create node instance
   // subscribe to topic "stringm" an register the callback function
-  subs = nodeh->create_subscription<std_msgs::msg::String>
+  subs = nodeh->create_subscription<example_interfaces::msg::String>
                                          ("stringm",10,&stringCallback);
     // subscribe to topic "intm" an register the callback function
-  subi = nodeh->create_subscription<std_msgs::msg::Int32>
+  subi = nodeh->create_subscription<example_interfaces::msg::Int32>
                                          ("intm",10,&intCallback);
   rclcpp::spin(nodeh); // wait for messages and process them
  

@@ -3,14 +3,14 @@
 schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>talklisten</name>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <description>Talker/Listener nodes</description>
   <maintainer email="scarpin@ucmerced.edu">Stefano Carpin</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
-  <depend>std_msgs</depend>
+  <depend>example_interfaces</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

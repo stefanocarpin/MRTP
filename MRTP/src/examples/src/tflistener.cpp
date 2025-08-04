@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Stefano Carpin
+Copyright 2024 Stefano Carpin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ limitations under the License.
 
 #include <rclcpp/rclcpp.hpp>
 #include <tf2_ros/transform_listener.h>
+#include <tf2_ros/buffer.h>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 
 int main(int argc, char** argv){
@@ -45,6 +46,11 @@ int main(int argc, char** argv){
 		transformStamped.transform.translation.x,
 		transformStamped.transform.translation.y,
 		transformStamped.transform.translation.z);
+    RCLCPP_INFO(nodeh->get_logger(),"Rotation: %f %f %f %f",
+		transformStamped.transform.rotation.x,
+		transformStamped.transform.rotation.y,
+		transformStamped.transform.rotation.z,
+		transformStamped.transform.rotation.w);
   }
   return 0;
 }

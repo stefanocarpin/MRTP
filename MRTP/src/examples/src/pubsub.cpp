@@ -16,14 +16,14 @@ limitations under the License.
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp> // to receive laser scans
-#include <std_msgs/msg/float32.hpp> // to send floating point numbers
+#include <example_interfaces/msg/float32.hpp> // to send floating point numbers
 
 // publisher object to send the result
-rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr pubf;
+rclcpp::Publisher<example_interfaces::msg::Float32>::SharedPtr pubf;
 
 // callback function called when a laser scan is received
 void processScan(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
-  std_msgs::msg::Float32 out; // message storing the result (closest distance)
+  example_interfaces::msg::Float32 out; // message with closest distance
   out.data = msg->ranges[0]; // initialize result
   // iterate over all readings and update result if necessary
   for(unsigned int i = 1 ; i < msg->ranges.size() ; i++ ) {
@@ -42,7 +42,8 @@ int main(int argc,char ** argv) {
   nodeh = rclcpp::Node::make_shared("pubsub"); // create node
 
   // create publisher (global variable)
-  pubf = nodeh->create_publisher<std_msgs::msg::Float32>("closest",1000);
+  pubf = nodeh->create_publisher<example_interfaces::msg::Float32>
+                                                     ("closest",1000);
   // create subscriber and register callback function
   auto sub = nodeh->create_subscription<sensor_msgs::msg::LaserScan>
     ("scan",10,&processScan);
