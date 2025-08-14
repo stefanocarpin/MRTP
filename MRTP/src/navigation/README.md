@@ -6,8 +6,8 @@ The C++ <code>Navigator</code> class is the equivalent of the Python <code>Basic
 <table>
 <thead>
 <tr>
-<td>Python method</td>
-<td>C++ method</td>
+<td><b>Python method</b></td>
+<td><b>C++ method</b></td>
 </tr>
 </thead>
 <tbody>
