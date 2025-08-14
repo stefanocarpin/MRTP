@@ -83,8 +83,14 @@ void Navigator::WaitUntilNav2Active()
     RCLCPP_INFO(this->get_logger(),"Waiting for Nav2 to activate...");
   
   wait_for_node_to_activate("amcl");
+  if (debug)
+    RCLCPP_INFO(this->get_logger(),"acml is ready");
   wait_for_initial_pose();
+  if (debug)
+    RCLCPP_INFO(this->get_logger(),"initial pose is received");
   wait_for_node_to_activate("bt_navigator");
+  if (debug)
+    RCLCPP_INFO(this->get_logger(),"bt_navigator is ready");
 
   if (debug)
     RCLCPP_INFO(this->get_logger(),"Nav2 is ready!");
