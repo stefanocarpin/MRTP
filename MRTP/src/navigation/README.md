@@ -91,9 +91,9 @@ Internal methods (those with the name starting with <code>_</code>) have either 
 API Differences<br>
 <ul>
 <li> <code>CancelTask</code> is a blocking method, i.e., if a task is being executed and the server accepts the cancellation request, the method does not return until the task is canceled by the server.
-<li> <code>GetFeedback</code> returns a generic pointer <code>std::shared_ptr < const void ></code>   that must be cast to the appropriat type to access the feedback message. See the <code>testpackage.cpp</code> for an example of how this is done.
+<li> <code>GetFeedback</code> returns a generic pointer <code>std::shared_ptr < const void ></code>   that must be cast to the appropriate type to access the feedback message. See the <code>testpackage.cpp</code> for an example of how this is done.
 </ul>
 
-The following methods have <i>not</i> been ported because the corresponding action servrs are not part of the Foxy distribution: <code>goThroughPose</code>, <code>assistedTeleop</code>, <code>getPathThroughPoses</code>, <code>smoothPath</code>.
+The following methods have <i>not</i> been ported because the corresponding action servers were not part of the Foxy distribution: <code>goThroughPose</code>, <code>assistedTeleop</code>, <code>getPathThroughPoses</code>, <code>smoothPath</code>.
 
   The file <code>testpackage.cpp</code> shows how each method can be called. To test it, follow the same Gazebo/RViz setup described in https://docs.nav2.org/getting_started/index.html
