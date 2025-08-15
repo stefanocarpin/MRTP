@@ -20,6 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(example_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(turtlesim REQUIRED)
@@ -52,6 +53,7 @@ add_executable(talkeroop src/talkeroop.cpp)
 add_executable(convert src/convert.cpp)
 add_executable(talkerooptimer src/talkerooptimer.cpp)
 add_executable(actioncall src/actioncall.cpp)
+add_executable(resetparticles src/resetparticles.cpp)
 
 
 
@@ -76,6 +78,7 @@ ament_target_dependencies(talkeroop rclcpp std_msgs)
 ament_target_dependencies(convert rclcpp geometry_msgs nav_msgs tf2 tf2_ros tf2_geometry_msgs)
 ament_target_dependencies(talkerooptimer rclcpp std_msgs)
 ament_target_dependencies(actioncall rclcpp rclcpp_action nav2_msgs)
+ament_target_dependencies(resetparticles rclcpp std_srvs)
 
 
 
@@ -103,6 +106,7 @@ install(TARGETS talkeroop DESTINATION lib/${PROJECT_NAME})
 install(TARGETS convert DESTINATION lib/${PROJECT_NAME})
 install(TARGETS talkerooptimer DESTINATION lib/${PROJECT_NAME})
 install(TARGETS actioncall DESTINATION lib/${PROJECT_NAME})
+install(TARGETS resetparticles DESTINATION lib/${PROJECT_NAME})
 
 
 
