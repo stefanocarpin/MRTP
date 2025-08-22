@@ -1,5 +1,13 @@
 # MRTP
 This repository contains material related to the textbook "Mobile Robotics Theory and Practice" (aka MRTP -- https://robotics.ucmerced.edu/MRTP).
+If you cite the book, please use the following:
+
+    @misc{MRTP,
+    author = {Stefano Carpin},
+    title = {Mobile Robotics Theory and Practice},
+    url = {http://robotics.ucmerced.edu/MRTP},
+    year={2025}
+    } 
 
 See https://github.com/stefanocarpin/MRTP/wiki/Installation-Intructions for instructions on what to install to run the examples presented in the textbook.
 
