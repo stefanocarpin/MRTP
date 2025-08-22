@@ -1,5 +1,5 @@
 # MRTP
-This repository contains material related to the textbook "Mobile Robotics Theory and Practice" (aka MRTP).
+This repository contains material related to the textbook "Mobile Robotics Theory and Practice" (aka MRTP -- https://robotics.ucmerced.edu/MRTP).
 
 See https://github.com/stefanocarpin/MRTP/wiki/Installation-Intructions for instructions on what to install to run the examples presented in the textbook.
 
