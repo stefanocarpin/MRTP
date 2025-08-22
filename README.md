@@ -4,7 +4,7 @@ If you cite the book, please use the following:
 
     @misc{MRTP,
     author = {Stefano Carpin},
-    title = {Mobile Robotics Theory and Practice},
+    title = {Mobile Robotics: Theory and Practice},
     url = {http://robotics.ucmerced.edu/MRTP},
     year={2025}
     } 
