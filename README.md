@@ -1,5 +1,5 @@
 # MRTP
-This repository contains material related to the textbook "Mobile Robotics Theory and Practice" (aka MRTP -- https://robotics.ucmerced.edu/MRTP).
+This repository contains material related to the textbook "Mobile Robotics: Theory and Practice" (aka MRTP -- https://robotics.ucmerced.edu/MRTP).
 If you cite the book, please use the following:
 
     @misc{MRTP,
