@@ -14,6 +14,8 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name,'launch'), glob('launch/*.launch.py')),
         (os.path.join('share', package_name,'params'), glob('params/*.yaml')),
+        (os.path.join('share', package_name,'params','indoor'), glob('params/indoor/*.yaml')),
+        (os.path.join('share', package_name,'params','outdoor'), glob('params/outdoor/*.yaml')),
         ],
     install_requires=['setuptools'],
     zip_safe=True,

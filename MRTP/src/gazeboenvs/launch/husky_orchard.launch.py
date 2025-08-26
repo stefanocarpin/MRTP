@@ -88,7 +88,7 @@ def generate_launch_description():
 
     setup_path = DeclareLaunchArgument(
         'setup_path',
-        default_value=os.path.join(pkg_gazeboenvs,'params'),
+        default_value=os.path.join(pkg_gazeboenvs,'params/outdoor'),
         description='Clearpath setup path')
 
     ARGUMENTS.append(setup_path)
