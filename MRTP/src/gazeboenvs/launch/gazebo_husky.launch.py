@@ -14,6 +14,10 @@
 #
 # @author Roni Kreinin (rkreinin@clearpathrobotics.com)
 
+# modified by Stefano Carpin for https://github/stefanocarpin/MRTP
+
+import os
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
@@ -36,9 +40,7 @@ ARGUMENTS = [
                               'warehouse',
                           ],
                           description='Gazebo World'),
-    DeclareLaunchArgument('setup_path',
-                          default_value=[EnvironmentVariable('HOME'), '/clearpath/'],
-                          description='Clearpath setup path'),
+   
     DeclareLaunchArgument('use_sim_time', default_value='true',
                           choices=['true', 'false'],
                           description='use_sim_time'),
@@ -54,8 +56,9 @@ ARGUMENTS.append(DeclareLaunchArgument('z', default_value='0.3',
 
 def generate_launch_description():
     # Directories
-    pkg_clearpath_gz = get_package_share_directory(
-        'clearpath_gz')
+    pkg_clearpath_gz = get_package_share_directory('clearpath_gz')
+
+    pkg_gazeboenvs = get_package_share_directory('gazeboenvs')
 
     # Paths
     gz_sim_launch = PathJoinSubstitution(
@@ -82,6 +85,13 @@ def generate_launch_description():
             ('z', LaunchConfiguration('z')),
             ('yaw', LaunchConfiguration('yaw'))]
     )
+
+    setup_path = DeclareLaunchArgument(
+        'setup_path',
+        default_value=os.path.join(pkg_gazeboenvs,'params'),
+        description='Clearpath setup path')
+
+    ARGUMENTS.append(setup_path)
 
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
