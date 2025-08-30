@@ -1,6 +1,5 @@
 WORKSPACE:=MRTP
 NOVNC:=ghcr.io/ucmercedrobotics/docker-novnc
-ROBOT:=husky
 IMAGE:=ghcr.io/ucmercedrobotics/mrtp
 
 # Automatic Docker platform detection based on host architecture
@@ -17,15 +16,25 @@ endif
 
 PLATFORM_ARG := --platform $(PLATFORM)
 
+# GPU detection - check if nvidia-docker or nvidia-container-runtime is available
+GPU_AVAILABLE := $(shell command -v nvidia-docker >/dev/null 2>&1 && echo "true" || (docker info 2>/dev/null | grep -q nvidia && echo "true" || echo "false"))
+
+# GPU flags - only set if GPU is available
+ifeq ($(GPU_AVAILABLE),true)
+    GPU_FLAGS := --gpus=all
+else
+    GPU_FLAGS :=
+endif
+
 shell:
-	CONTAINER_PS=$(shell docker ps -aq --filter ancestor=${IMAGE}:${ROBOT}) && \
+	CONTAINER_PS=$(shell docker ps -aq --filter ancestor=${IMAGE}) && \
 	docker exec -it $${CONTAINER_PS} bash
 
 build-image:
-	docker build -f docker/Dockerfile . -t ${IMAGE}:${ROBOT} --target ${ROBOT}
+	docker build -f Dockerfile . -t ${IMAGE} --target base
 
 push:
-	docker push ${IMAGE}:${ROBOT}
+	docker push ${IMAGE}
 
 vnc:
 	docker run -d --rm --net=host \
@@ -34,12 +43,14 @@ vnc:
 	${NOVNC}
 
 bash:
+	cd .. && \
 	docker run -it --rm \
 	--net=host \
 	--privileged \
-	-v .:/${WORKSPACE}:Z \
-	-v ~/.ssh:/root/.ssh:ro \
-	${IMAGE}:${ROBOT} bash
+	$(GPU_FLAGS) \
+	-v $(PWD)/../MRTP:/${WORKSPACE}/MRTP:Z \
+	-v $(HOME)/.ssh:/root/.ssh:ro \
+	${IMAGE} bash
 
 clean:
 	rm -rf build/ install/ log/
