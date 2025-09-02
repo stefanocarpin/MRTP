@@ -33,35 +33,31 @@ Windows requires a few extra steps.
    """
 2. Install prerequisites
 
-choco install make -y
+`choco install make -y`
 
 3. Clone MRTP repo
 
-4. 3. Build ROS2 Jazzy image
+4. Build ROS2 Jazzy image
 
-make build-image
+`make build-image`
 
-4. Start container
+4. Start image
 
-make bash
+`make bash`
 
 5. Inside container: set DISPLAY for GUI (add to ~/.bashrc for persistence)
 
-export DISPLAY=host.docker.internal:0.0
+`export DISPLAY=host.docker.internal:0.0`
 
 6. Verify ROS2 works
 
-ros2 -h && echo $ROS_DISTRO
+`ros2 -h && echo $ROS_DISTRO`
 
-7. Build workspace (only first time or after code changes)
-
-mkdir -p /MRTP/src && cd /MRTP/src && git clone
-https://github.com/stefanocarpin/MRTP cd /MRTP && colcon build
-–packages-skip unsorted source install/setup.bash
-
+7. Checkout and build workspace (only first time or after code changes)
+See https://github.com/stefanocarpin/MRTP
 
 8. Test GUI apps
 
-sudo apt-get update && sudo apt-get install -y x11-apps # (only once, for xclock test) 
-xclock # test GUI 
-ros2 run turtlesim turtlesim_node # turtlesim GUI 
+`sudo apt-get update && sudo apt-get install -y x11-apps` # (only once, for xclock test) 
+`xclock` # test GUI 
+`ros2 run turtlesim turtlesim_node` # turtlesim GUI 
