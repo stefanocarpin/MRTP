@@ -4,8 +4,11 @@ Setting yourself up with Docker usually means you don't have a Linux machine or 
 In either case, you can find the instructions on how to install Docker for your preferred OS [here](https://docs.docker.com/desktop/?_gl=1*f1d4un*_gcl_au*MTQ5ODc3MjEwOC4xNzU2NzEyODAz*_ga*MjU1MDAwMDU4LjE3NTY3MTI3OTk.*_ga_XJWPQMJYHQ*czE3NTY3MTI3OTgkbzEkZzEkdDE3NTY3MTI4MDMkajU1JGwwJGgw).
 
 ## Usage
-For use in Docker, we've provided a container for each simulation environment. 
-1. First `make build-image`. This will create the container image.
+For use in Docker, we've provided a container for each simulation environment.  First clone the MRTP repo
+
+`git clone https://github.com/stefanocarpin/MRTP`
+
+1. Move to the folder MRTP/docker and run `make build-image`. This will create the container image.
 2. Next, pull the image for using noVNC. This can be done by running `make vnc`. See [noVNC](#novnc).
 3. To access this image, simply `make bash`.
 4. If you want to run multiple shells within the container, run `make shell` from outside after you've spawned the container.
@@ -19,8 +22,7 @@ After you've set up the above, log into your browser of choice and go to http://
 From here you can view all of your Gazebo/RViz simulations.
 
 ## Windows Users
-Windows requires a few extra steps.
-0. Install Docker (see above)
+Windows requires a few extra steps. First install Docker (see instructions above).
 1. Install VcXsrv (Windows X Server)
 
    """
