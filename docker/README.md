@@ -38,11 +38,11 @@ Windows requires a few extra steps. First install Docker (see instructions above
 
 `choco install make -y`
 
-3. Clone MRTP repo
+3. Clone the MRTP repo
 
 `git clone https://github.com/stefanocarpin/MRTP`
 
-4. Build ROS2 Jazzy image. Move to the folder MRTP/docker
+4. Build the ROS2 Jazzy image with docker. Move to the folder MRTP/docker
 
 `make build-image`
 
