@@ -59,5 +59,7 @@ See https://github.com/stefanocarpin/MRTP
 8. Test GUI apps
 
 `sudo apt-get update && sudo apt-get install -y x11-apps` # (only once, for xclock test) 
+
 `xclock` # test GUI 
+
 `ros2 run turtlesim turtlesim_node` # turtlesim GUI 
