@@ -20,6 +20,7 @@ From here you can view all of your Gazebo/RViz simulations.
 
 ## Windows Users
 Windows requires a few extra steps.
+0. Install Docker (see above)
 1. Install VcXsrv (Windows X Server)
 
    """
@@ -37,26 +38,28 @@ Windows requires a few extra steps.
 
 3. Clone MRTP repo
 
-4. Build ROS2 Jazzy image
+`git clone https://github.com/stefanocarpin/MRTP`
+
+4. Build ROS2 Jazzy image. Move to the folder MRTP/docker
 
 `make build-image`
 
-4. Start image
+5. Start image
 
 `make bash`
 
-5. Inside container: set DISPLAY for GUI (add to ~/.bashrc for persistence)
+6. Inside container: set DISPLAY for GUI (add to ~/.bashrc for persistence)
 
 `export DISPLAY=host.docker.internal:0.0`
 
-6. Verify ROS2 works
+7. Verify ROS2 works
 
 `ros2 -h && echo $ROS_DISTRO`
 
-7. Checkout and build workspace (only first time or after code changes)
-See https://github.com/stefanocarpin/MRTP
+8. Build the worspace: move to the folder MRTP/MRTP and run
+   `colcon build`
 
-8. Test GUI apps
+9. Test GUI apps
 
 `sudo apt-get update && sudo apt-get install -y x11-apps` # (only once, for xclock test) 
 
