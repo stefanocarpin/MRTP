@@ -11,7 +11,7 @@ If you cite the book, please use the following:
 
 See https://github.com/stefanocarpin/MRTP/wiki/Installation-Intructions for instructions on what to install to run the examples presented in the textbook.
 
-To build the code examples, clone the repository, 
+To build the code examples, open a shell, clone the repository, 
 
     git clone https://github.com/stefanocarpin/MRTP
 
