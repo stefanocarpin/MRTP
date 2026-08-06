@@ -32,4 +32,4 @@ If for some reason you cannot install ROS2 Jazzy on your machine (working with W
 
 [See Docker README](docker/README.md).
 
-Note that you can also use the docker distribution on a system using Ubuntu Noble, though this will make things slower.  Some students in the past reported being able to run everything under Windows using [WSL] but this is not supported.
+Note that you can also use the docker distribution on a system using Ubuntu Noble, though this will make things slower.  Some students in the past reported being able to run everything under Windows using [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) but this is not supported.
