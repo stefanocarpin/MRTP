@@ -11,11 +11,6 @@ RUN apt-get update && apt-get install -y git wget python3-full python3-pip vim n
     ros-${ROS_DISTRO}-turtlebot4-simulator ros-${ROS_DISTRO}-irobot-create-nodes \
     python3-vcstool python3-apt
 
-# for some reason MESA drivers are obsolete
-RUN add-apt-repository ppa:kisak/kisak-mesa && \
-    apt update && \
-    apt upgrade -y
-
 # install python requirements
 COPY ./requirements.txt /requirements.txt
 
