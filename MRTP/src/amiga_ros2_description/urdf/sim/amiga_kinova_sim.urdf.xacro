@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<!--
+  amiga_kinova_sim.urdf.xacro — SIMULATION ONLY.
+
+  Combined Amiga base + Kinova Gen3 URDF consumed exclusively by the
+  ign_ros2_control plugin inside Gazebo (published by the TF-muted
+  "gz_description_server" robot_state_publisher in
+  amiga_ros2_gazebo/launch/gazebo.launch.py).
+
+  It is NEVER used for the ROS TF tree: on both hardware and sim, base TF
+  comes from urdf/amiga_descr.urdf.xacro (root base_link) and arm TF from
+  the kinova RSP (/kinova/robot_description). This file therefore keeps the
+  digital-twin frame names (root "chassis", arm root via kortex macro) which
+  must match models/amiga_kinova/model.sdf in amiga_ros2_gazebo — the
+  ros2_control joint names below are looked up in the Gazebo model by name.
+
+  Ported from amiga_kinova_digital_twin amiga_kinova.urdf.xacro.
+-->
+<robot name="amiga_kinova" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name="sim_ignition" default="true"/>
+  <xacro:arg name="use_fake_hardware" default="false"/>
+  <xacro:arg name="robot_ip" default="192.168.11.11"/>
+
+  <material name="gray">
+    <color rgba="0.7 0.7 0.7 1"/>
+  </material>
+  <material name="dark_gray">
+    <color rgba="0.3 0.3 0.3 1"/>
+  </material>
+
+  <!-- NOTE: no world link on purpose. 'chassis' is the model root so the
+       base pose is owned by physics/localization, not a fixed world joint. -->
+
+  <!-- ══════════════════════ AMIGA BASE ══════════════════════ -->
+  <link name="chassis">
+    <inertial>
+      <origin xyz="-0.084156 0.055422 0.642313" rpy="0 0 0"/>
+      <mass value="29.8514"/>
+      <inertia ixx="2.6397" ixy="-0.000921" ixz="-0.000202"
+               iyy="1.6761" iyz="0.0000034" izz="4.0484"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.65" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://amiga_ros2_description/meshes/amiga/chassis_link.STL"/>
+      </geometry>
+      <material name="gray"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.80" rpy="0 0 0"/>
+      <geometry>
+        <box size="1.2 0.8 1.0"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <xacro:macro name="sim_wheel" params="name xyz">
+    <link name="${name}_wheel_link">
+      <inertial>
+        <mass value="7.45957"/>
+        <inertia ixx="0.075753" ixy="0" ixz="0"
+                 iyy="0.137674" iyz="0" izz="0.075755"/>
+      </inertial>
+      <visual>
+        <geometry>
+          <mesh filename="package://amiga_ros2_description/meshes/amiga/${name}_wheel_link.STL"/>
+        </geometry>
+        <material name="dark_gray"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+        <geometry><cylinder radius="0.2159" length="0.21"/></geometry>
+      </collision>
+    </link>
+    <joint name="${name}_wheel_joint" type="continuous">
+      <parent link="chassis"/>
+      <child link="${name}_wheel_link"/>
+      <origin xyz="${xyz}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:sim_wheel name="front_right" xyz="0.477877 -0.859075 0.215917"/>
+  <xacro:sim_wheel name="front_left"  xyz="0.478124 0.859075 0.215883"/>
+  <xacro:sim_wheel name="rear_right"  xyz="-0.478121 -0.859075 0.215921"/>
+  <xacro:sim_wheel name="rear_left"   xyz="-0.478121 0.859075 0.215860"/>
+
+  <!-- Kinova mounting plate -->
+  <link name="kinova_plate_link">
+    <inertial>
+      <origin xyz="0 0 0.01" rpy="0 0 0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0"
+               iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <geometry><box size="0.3 0.3 0.02"/></geometry>
+      <material name="dark_gray"/>
+    </visual>
+    <collision>
+      <geometry><box size="0.3 0.3 0.02"/></geometry>
+    </collision>
+  </link>
+  <joint name="kinova_plate_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="kinova_plate_link"/>
+    <origin xyz="0.15 -0.915 0.601" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ══════════════ KINOVA GEN3 ARM (kortex macro) ══════════════ -->
+  <xacro:include filename="$(find kortex_description)/robots/kortex_robot.xacro"/>
+
+  <xacro:load_robot
+    parent="kinova_plate_link"
+    arm="gen3"
+    gripper=""
+    gripper_joint_name=""
+    dof="6"
+    vision="true"
+    robot_ip="$(arg robot_ip)"
+    username="admin"
+    password="admin"
+    port="10000"
+    port_realtime="10001"
+    session_inactivity_timeout_ms="60000"
+    connection_inactivity_timeout_ms="20000"
+    prefix=""
+    use_fake_hardware="$(arg use_fake_hardware)"
+    fake_sensor_commands="false"
+    sim_gazebo="$(arg sim_ignition)">
+    <origin xyz="0 0 0.0078" rpy="0 0 -1.5708"/>
+  </xacro:load_robot>
+
+  <!-- Wrist camera optical frame (the gz rgbd sensor in model.sdf hangs off
+       camera_depth_frame, which comes from the kortex vision xacro) -->
+  <link name="camera_depth_optical_frame"/>
+  <joint name="camera_depth_optical_joint" type="fixed">
+    <parent link="camera_depth_frame"/>
+    <child link="camera_depth_optical_frame"/>
+    <origin xyz="0 0 0" rpy="-3.1416 -1.5708 -3.1416"/>
+  </joint>
+
+  <!-- ══════════════ ros2_control — Amiga wheels ══════════════
+       (the arm/gripper ros2_control blocks come from the kortex macro
+        when sim_ignition:=true) -->
+  <ros2_control name="amiga_base" type="system">
+    <hardware>
+      <plugin>ign_ros2_control/IgnitionSystem</plugin>
+    </hardware>
+    <joint name="front_left_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="front_right_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="rear_left_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="rear_right_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+  </ros2_control>
+
+</robot>

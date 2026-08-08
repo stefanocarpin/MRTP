@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="vectornav" params="parent_link vectornav_link_name joint_origin_xyz joint_origin_rpy">
+
+    <link name="${vectornav_link_name}"/>
+
+    <joint name="${vectornav_link_name}_joint" type="fixed">
+      <origin xyz="${joint_origin_xyz}" rpy="${joint_origin_rpy}"/>
+      <parent link="${parent_link}"/>
+      <child link="${vectornav_link_name}"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

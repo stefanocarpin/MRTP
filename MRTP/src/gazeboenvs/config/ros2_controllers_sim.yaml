@@ -1,0 +1,101 @@
+# Controllers loaded by the ign_ros2_control plugin inside Gazebo
+# (see models/amiga_kinova/model.sdf).
+#
+# Arm/gripper controller NAMES AND TYPES mirror the real robot
+# (ros2-kortex-control -> kinova_gen3_6dof_robotiq_2f_85_moveit_config/config/
+# ros2_controllers.yaml) so kortex_move / MoveIt run unchanged in sim.
+# Hardware-only controllers (twist_controller, fault_controller) do not exist
+# here: KinovaCommandVelocity/twist mode is unavailable in simulation.
+#
+# Top-level keys use the /**/<name> wildcard (not bare <name>) because this
+# same file is shared by both the unnamespaced robot1 controller_manager
+# (FQN /controller_manager) and a namespaced robot2 one (FQN
+# /amiga2/controller_manager, see gazebo.launch.py) — a bare key only matches
+# a root-namespace node, so ros2_control's per-controller `type` params
+# silently would not load for a namespaced instance.
+#
+# This file keeps the LEADING slash (/**/<name>), unlike
+# amiga_localization's EKF/wheel_odom yaml configs and amiga_navigation's
+# nav2_params.yaml, which use **/<name> (no leading slash). Those other
+# files are loaded by standalone processes via the standard
+# `--params-file` + `-r __ns:=` CLI path, where rcl resolves a key as
+# <node namespace>/<key> — a leading slash there produces an invalid
+# double-slash path. This file is loaded by ign_ros2_control through an
+# embedded (non-CLI) parameter API inside the Gazebo process, which does
+# not have that issue — keep the leading slash here.
+
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 20  # Hz
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    robotiq_gripper_controller:
+      type: position_controllers/GripperActionController
+
+/**/diff_drive_controller:
+  ros__parameters:
+    use_stamped_vel: false
+    left_wheel_names:
+      - front_left_wheel_joint
+      - rear_left_wheel_joint
+    right_wheel_names:
+      - front_right_wheel_joint
+      - rear_right_wheel_joint
+
+    # Gazebo model geometry (digital-twin chassis), NOT the real Amiga's
+    # 1.13 m track. /canbus/twist carries body (v, w) so downstream wheel
+    # odometry is unaffected by this difference.
+    wheel_separation: 1.71815
+    wheel_radius: 0.2159
+
+    odom_frame_id: odom
+    base_frame_id: chassis
+    pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    open_loop: false
+    enable_odom_tf: false  # localization EKF owns odom->base TF
+
+    linear.x.max_velocity: 1.0
+    linear.x.min_velocity: -1.0
+    angular.z.max_velocity: 1.0
+    angular.z.min_velocity: -1.0
+
+    publish_rate: 20.0
+
+# ── Kinova Gen3 arm (same name/params as real robot) ───────────────────────
+/**/joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - joint_1
+      - joint_2
+      - joint_3
+      - joint_4
+      - joint_5
+      - joint_6
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 50.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: false
+    constraints:
+      stopped_velocity_tolerance: 0.01
+      goal_time: 0.0
+
+# ── Robotiq 2F-85 gripper (same name/type as real robot) ───────────────────
+/**/robotiq_gripper_controller:
+  ros__parameters:
+    joint: robotiq_85_left_knuckle_joint
+    goal_tolerance: 0.05
+    allow_stalling: true

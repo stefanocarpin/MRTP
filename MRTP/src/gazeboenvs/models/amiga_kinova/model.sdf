@@ -1,0 +1,1403 @@
+<?xml version="1.0" ?>
+<sdf version='1.7'>
+
+	<model name='amiga' canonical_link='chassis'>
+		    <!--<pose relative_to='world'>-7 0 0 0 0 0</pose>   the pose is relative to the world by default-->
+
+		    <!--#######  CHASSIS LINK  #######-->
+		    <link name='chassis'>
+			<!--Inertial Informatıon of the chassis taken from SolidWorks-->
+		     	<inertial>
+				<pose>-0.084156 0.055422 0.642313 0 -0 0</pose>
+				<mass>29.8514</mass>
+				<inertia>
+		  			<ixx>2.6396625136624</ixx>
+		  			<ixy>-0.000921389214172419</ixy>
+		  			<ixz>-0.000202110780588825</ixz>
+		  			<iyy>1.67612712697157</iyy>
+		  			<iyz>3.42820225391418E-06</iyz>
+		  			<izz>4.04844807093251</izz>
+				</inertia>
+	      		</inertial>
+	      		<!--Visuals of the chassis colorized with Blender-->
+			<visual name='chassis_link_visual'>
+				<pose>0 0 0.65 0 -0 0</pose>
+				<geometry>
+		  			<mesh>
+		    				<scale>1 1 1</scale>
+		    				<uri>package://amiga_ros2_description/meshes/amiga/chassis_link.STL</uri>
+		  			</mesh>
+				</geometry>
+        <material>
+          <diffuse>0.6 0.6 0.6 1</diffuse>
+          <ambient>0.6 0.6 0.6 1</ambient>
+        </material>
+	      		</visual>
+			<!--Collision information of the chassis-->
+			<collision name='chassis_link_collision'>
+				<pose>0 0 0.80 0 -0 0</pose>
+				<geometry>
+					<box><size>1.2 0.8 1.0</size></box>
+				</geometry>
+			</collision>
+		    			<!-- CHASSIS IMU (added for EKF heading fusion) -->
+			<sensor name="chassis_imu" type="imu">
+				<always_on>true</always_on>
+				<update_rate>50</update_rate>
+				<topic>chassis/imu</topic>
+				<gz_frame_id>chassis</gz_frame_id>
+				<imu>
+					<orientation_reference_frame>
+						<localization>ENU</localization>
+					</orientation_reference_frame>
+					<angular_velocity>
+						<x><noise type="gaussian"><mean>0</mean><stddev>0.0009</stddev></noise></x>
+						<y><noise type="gaussian"><mean>0</mean><stddev>0.0009</stddev></noise></y>
+						<z><noise type="gaussian"><mean>0</mean><stddev>0.0009</stddev></noise></z>
+					</angular_velocity>
+					<linear_acceleration>
+						<x><noise type="gaussian"><mean>0</mean><stddev>0.0017</stddev></noise></x>
+						<y><noise type="gaussian"><mean>0</mean><stddev>0.0017</stddev></noise></y>
+						<z><noise type="gaussian"><mean>0</mean><stddev>0.0017</stddev></noise></z>
+					</linear_acceleration>
+				</imu>
+			</sensor>
+		    </link>
+
+		    <!--#######  CHASSIS LINK  #######-->
+			<link name='kinova_plate_link'>
+      	<pose relative_to="chassis">0.15 -0.915 0.601 0 0 0</pose> <!--angles are in radian-->
+
+			<!--Inertial Informatıon of the kinova_plate taken from SolidWorks (not yet)-->
+		     	<!-- <inertial>
+				<pose>-0.084156 0.055422 0.642313 0 -0 0</pose>
+				<mass>29.8514</mass>
+				<inertia>
+		  			<ixx>2.6396625136624</ixx>
+		  			<ixy>-0.000921389214172419</ixy>
+		  			<ixz>-0.000202110780588825</ixz>
+		  			<iyy>1.67612712697157</iyy>
+		  			<iyz>3.42820225391418E-06</iyz>
+		  			<izz>4.04844807093251</izz>
+				</inertia>
+	      		</inertial> -->
+	      		<!-- Placeholder inertia — replace with real SolidWorks values -->
+      		<inertial>
+				<pose>0 0 0.01 0 0 0</pose>
+				<mass>2.0</mass>
+				<inertia>
+					<ixx>0.01</ixx><ixy>0</ixy><ixz>0</ixz>
+					<iyy>0.01</iyy><iyz>0</iyz><izz>0.01</izz>
+				</inertia>
+      		</inertial>
+      		<!--Visuals of the chassis colorized with Blender-->
+			<visual name='kinova_plate_link_visual'>
+				<pose>0 0 0 0 0 0</pose>
+				<geometry>
+					<box><size>0.3 0.3 0.02</size></box>
+				</geometry>
+				<material>
+					<diffuse>0.3 0.3 0.3 1</diffuse>
+					<ambient>0.3 0.3 0.3 1</ambient>
+				</material>
+			</visual>
+			<!--Collision information of the chassis-->
+			<collision name='kinova_plate_link_collision'>
+				<pose>0 0 0 0 0 0</pose>
+				<geometry>
+					<box><size>0.3 0.3 0.02</size></box>
+				</geometry>
+			</collision>
+		    </link>
+
+
+		    <!--#######  FRONT RIGHT WHEEL LINK  #######-->
+		    <link name='front_right_wheel_link'>
+		    	 <pose relative_to="chassis">0.477877 -0.859075 0.215917 0 0 0</pose> <!--angles are in radian-->
+			<!--Inertial Informatıon of the front_right_wheel taken from SolidWorks-->
+		     	 <inertial>
+	       			<pose>-0 -0.000497 3e-06 0 -0 0</pose>
+			        <mass>7.45957</mass>
+				<inertia>
+		  			<ixx>0.0757532</ixx>
+		  			<ixy>-7.64794e-08</ixy>
+		  			<ixz>-8.20095e-07</ixz>
+		  			<iyy>0.137674</iyy>
+		  			<iyz>3.04859e-08</iyz>
+		  			<izz>0.0757551</izz>
+				</inertia>
+	      		</inertial>
+	      		<!--Visuals of the front_right_wheel colorized with Blender-->
+			<visual name='front_right_wheel_link_visual'>
+				<pose>0 0 0 0 -0 0</pose>
+				<geometry>
+		  			<mesh>
+		    				<scale>1 1 1</scale>
+		    				<uri>package://amiga_ros2_description/meshes/amiga/front_right_wheel_link.STL</uri>
+		  			</mesh>
+				</geometry>
+          <material>
+            <diffuse>0.35 0.35 0.35 1</diffuse>
+            <ambient>0.35 0.35 0.35 1</ambient>
+          </material>
+	      		</visual>
+			<!--Collision information of the front_right_wheel-->
+			<collision name='front_right_wheel_link_collision'>
+				<pose>0 0 0 1.5707963 0 0</pose>
+				<geometry>
+					<cylinder><radius>0.2159</radius><length>0.21</length></cylinder>
+				</geometry>
+			</collision>
+		    </link>
+
+		    <!--#######  FRONT LEFT WHEEL LINK  #######-->
+		    <link name='front_left_wheel_link'>
+		    	<pose relative_to="chassis">0.478124 0.859075 0.215883 0 0 0</pose> <!--angles are in radian-->
+			<!--Inertial Informatıon of the front_left_wheel taken from SolidWorks-->
+		     	<inertial>
+        			<pose>-1e-06 0.000497 -3e-06 0 -0 0</pose>
+        			<mass>7.45957</mass>
+        			<inertia>
+          				<ixx>0.0757533</ixx>
+          				<ixy>7.41655e-08</ixy>
+          				<ixz>9.0298e-07</ixz>
+          				<iyy>0.137673</iyy>
+          				<iyz>3.61607e-08</iyz>
+          				<izz>0.075755</izz>
+        			</inertia>
+      			</inertial>
+	      		<!--Visuals of the front_left_wheel colorized with Blender-->
+			<visual name='front_left_wheel_link_visual'>
+        			<pose>0 0 0 0 -0 0</pose>
+        			<geometry>
+          				<mesh>
+            					<scale>1 1 1</scale>
+            					<uri>package://amiga_ros2_description/meshes/amiga/front_left_wheel_link.STL</uri>
+          				</mesh>
+        			</geometry>
+          <material>
+            <diffuse>0.35 0.35 0.35 1</diffuse>
+            <ambient>0.35 0.35 0.35 1</ambient>
+          </material>
+      			</visual>
+			<!--Collision information of the front_left_wheel-->
+			<collision name='front_left_wheel_link_collision'>
+				<pose>0 0 0 1.5707963 0 0</pose>
+				<geometry>
+					<cylinder><radius>0.2159</radius><length>0.21</length></cylinder>
+				</geometry>
+			</collision>
+		    </link>
+
+ 		    <!--#######  REAR RIGHT WHEEL LINK  #######-->
+		    <link name='rear_right_wheel_link'>
+		    	<pose relative_to="chassis">-0.478121 -0.859075 0.215921 0 0 0</pose> <!--angles are in radian-->
+			<!--Inertial Informatıon of the rear_right_wheel taken from SolidWorks-->
+		     	<inertial>
+        			<pose>-3e-06 -0.000497 -1e-06 0 -0 0</pose>
+        			<mass>7.45957</mass>
+        			<inertia>
+          				<ixx>0.075755</ixx>
+					<ixy>-3.60956e-08</ixy>
+					<ixz>8.95878e-07</ixz>
+					<iyy>0.137673</iyy>
+					<iyz>-7.42765e-08</iyz>
+					<izz>0.0757533</izz>
+        			</inertia>
+      			</inertial>
+	      		<!--Visuals of the rear_right_wheel colorized with Blender-->
+			<visual name='rear_right_wheel_link_visual'>
+        			<pose>0 0 0 0 -0 0</pose>
+        			<geometry>
+          				<mesh>
+            					<scale>1 1 1</scale>
+            					<uri>package://amiga_ros2_description/meshes/amiga/rear_right_wheel_link.STL</uri>
+          				</mesh>
+        			</geometry>
+          <material>
+            <diffuse>0.35 0.35 0.35 1</diffuse>
+            <ambient>0.35 0.35 0.35 1</ambient>
+          </material>
+      			</visual>
+			<!--Collision information of the rear_right_wheel-->
+			<collision name='rear_right_wheel_link_collision'>
+				<pose>0 0 0 1.5707963 0 0</pose>
+				<geometry>
+					<cylinder><radius>0.2159</radius><length>0.21</length></cylinder>
+				</geometry>
+			</collision>
+		    </link>
+
+ 		    <!--#######  REAR LEFT WHEEL LINK  #######-->
+		    <link name='rear_left_wheel_link'>
+		    	<pose relative_to="chassis">-0.478121 0.859075 0.21586 0 0 0</pose> <!--angles are in radian-->
+			<!--Inertial Informatıon of the rear_left_wheel taken from SolidWorks-->
+		     	<inertial>
+        			<pose>3e-06 0.000497 1e-06 0 -0 0</pose>
+        			<mass>7.45957</mass>
+        			<inertia>
+          				<ixx>0.0757552</ixx>
+          				<ixy>-1.70085e-08</ixy>
+          				<ixz>-4.1989e-07</ixz>
+          				<iyy>0.137674</iyy>
+          				<iyz>5.35182e-08</iyz>
+          				<izz>0.0757532</izz>
+        			</inertia>
+      			</inertial>
+	      		<!--Visuals of the rear_left_wheel colorized with Blender-->
+			<visual name='rear_left_wheel_link_visual'>
+        			<pose>0 0 0 0 -0 0</pose>
+        			<geometry>
+          				<mesh>
+            					<scale>1 1 1</scale>
+            					<uri>package://amiga_ros2_description/meshes/amiga/rear_left_wheel_link.STL</uri>
+          				</mesh>
+        			</geometry>
+          <material>
+            <diffuse>0.35 0.35 0.35 1</diffuse>
+            <ambient>0.35 0.35 0.35 1</ambient>
+          </material>
+      			</visual>
+			<!--Collision information of the rear_left_wheel-->
+			<collision name='rear_left_wheel_link_collision'>
+				<pose>0 0 0 1.5707963 0 0</pose>
+				<geometry>
+					<cylinder><radius>0.2159</radius><length>0.21</length></cylinder>
+				</geometry>
+			</collision>
+		    </link>
+
+ 		    <!--#######  GPS LINK  #######-->
+		    <link name='GPS_link'>
+		    	<pose relative_to="chassis">-0.343 0.27301 1.66757 0 0 0</pose> <!--angles are in radian-->
+			<!--Inertial Informatıon of the GPS taken from SolidWorks-->
+		     	<inertial>
+        			<pose>-0.0218600947156138 0.0419855289307738 0.3606393614418721 0 0 0</pose>
+        			<mass>3.90964945047583</mass>
+        			<inertia>
+          				<ixx>0.0499433745040549</ixx>
+          				<ixy>-8.16620300040473E-05</ixy>
+          				<ixz>-0.0018718792187362</ixz>
+          				<iyy>0.0445451191312299</iyy>
+          				<iyz>-0.000101175023181075</iyz>
+          				<izz>0.0121756089849013</izz>
+        			</inertia>
+      			</inertial>
+	      		<!--Visuals of the GPS colorized with Blender-->
+			<visual name='GPS_link_visual'>
+        			<pose>0 0 0 0 0 0</pose>
+        			<geometry>
+          				<mesh>
+            					<scale>1 1 1</scale>
+            					<uri>package://amiga_ros2_description/meshes/amiga/GPS_link.STL</uri>
+          				</mesh>
+        			</geometry>
+          <material>
+            <diffuse>0.45 0.45 0.45 1</diffuse>
+            <ambient>0.45 0.45 0.45 1</ambient>
+          </material>
+      			</visual>
+			<!--Collision information of the rear_left_wheel-->
+
+
+      <!--#######  GPS PLUGING  #######-->
+      <sensor name="navsat" type="navsat">
+			  	<always_on>1</always_on>
+			  	<update_rate>5</update_rate>
+			  	<topic>navsat</topic>
+			</sensor>
+		    </link>
+
+		    <!--#######  FRONT CAMERA LINK  #######-->
+		    <link name='front_camera_link'>
+		    	<pose relative_to="chassis">-0.24835 0.27301 1.60272 0 0.2618 0</pose> <!--angles are in radian-->
+			<!--Inertial Informatıon of the front_camera taken from SolidWorks-->
+		     	<inertial>
+        			<pose>-0.0130228250132061 -0.000449225919208263 -3.08332527110267E-05 0 0 0</pose>
+        			<mass>0.044671376539154</mass>
+        			<inertia>
+          				<ixx>5.76076422204466E-05</ixx>
+          				<ixy>2.14051018622691E-07</ixy>
+          				<ixz>-1.04480200804118E-06</ixz>
+          				<iyy>8.21049481431884E-06</iyy>
+          				<iyz>-4.47549866597229E-08</iyz>
+          				<izz>5.25489240957785E-05</izz>
+        			</inertia>
+      			</inertial>
+	      		<!--Visuals of the front_camera colorized with Blender-->
+			<visual name='front_camera_link_visual'>
+        			<pose>0 0 0 0 0 0</pose>
+        			<geometry>
+          				<mesh>
+            					<scale>1 1 1</scale>
+            					<uri>package://amiga_ros2_description/meshes/amiga/front_camera_link.STL</uri>
+          				</mesh>
+        			</geometry>
+          <material>
+            <diffuse>0.45 0.45 0.45 1</diffuse>
+            <ambient>0.45 0.45 0.45 1</ambient>
+          </material>
+      			</visual>
+			<!--Collision information of the front_camera-->
+
+
+      			<!--#######  FRONT CAMERA RGBD PLUGING  #######-->
+      			<sensor name="oak_camera_front" type="rgbd_camera">
+          			<pose>0 0 0 0 0 0</pose>
+          			<camera>
+            				<horizontal_fov>1.047</horizontal_fov>
+            				<image>
+              					<width>320</width>
+              					<height>240</height>
+            				</image>
+            				<clip>
+              					<near>0.1</near>
+              					<far>100</far>
+            				</clip>
+          			</camera>
+          			<always_on>1</always_on>
+          			<update_rate>15</update_rate>
+          			<visualize>true</visualize>
+          			<topic>oak_camera_front</topic>
+          			<enable_metrics>true</enable_metrics>
+        		</sensor>
+      			<sensor name="oak_camera_front_imu" type="imu">
+          			<always_on>true</always_on>
+          			<update_rate>50</update_rate>
+          			<imu>
+            				<angular_velocity>
+              					<x><noise type="gaussian"><mean>0</mean><stddev>0.009</stddev></noise></x>
+              					<y><noise type="gaussian"><mean>0</mean><stddev>0.009</stddev></noise></y>
+              					<z><noise type="gaussian"><mean>0</mean><stddev>0.009</stddev></noise></z>
+            				</angular_velocity>
+            				<linear_acceleration>
+              					<x><noise type="gaussian"><mean>0</mean><stddev>0.021</stddev></noise></x>
+              					<y><noise type="gaussian"><mean>0</mean><stddev>0.021</stddev></noise></y>
+              					<z><noise type="gaussian"><mean>0</mean><stddev>0.021</stddev></noise></z>
+            				</linear_acceleration>
+          			</imu>
+          			<topic>oak_camera_front/imu</topic>
+      			</sensor>
+		    </link>
+
+ 		    <!--#######  BACK CAMERA LINK  #######-->
+		    <link name='back_camera_link'>
+		    	<pose relative_to="chassis">-0.43765 0.27301 1.60272 0 0.2618 3.14159</pose>
+			<!--Inertial Informatıon of the back_camera taken from SolidWorks-->
+		     	<inertial>
+        			<pose>0.01302282661567 0.000449226300249128 -3.08320037736287E-05 0 0 0</pose>
+        			<mass>0.044671376539154</mass>
+        			<inertia>
+          				<ixx>5.76076422204466E-05</ixx>
+          				<ixy>2.14051018622691E-07</ixy>
+          				<ixz>1.04480200804118E-06</ixz>
+          				<iyy>8.21049481431884E-06</iyy>
+          				<iyz>4.47549866597229E-08</iyz>
+          				<izz>5.25489240957785E-05</izz>
+        			</inertia>
+      			</inertial>
+	      		<!--Visuals of the back_camera colorized with Blender-->
+			<visual name='back_camera_link_visual'>
+        			<pose>0 0 0 0 0 -3.14159</pose>
+        			<geometry>
+          				<mesh>
+            					<scale>1 1 1</scale>
+            					<uri>package://amiga_ros2_description/meshes/amiga/back_camera_link.STL</uri>
+          				</mesh>
+        			</geometry>
+          <material>
+            <diffuse>0.45 0.45 0.45 1</diffuse>
+            <ambient>0.45 0.45 0.45 1</ambient>
+          </material>
+      			</visual>
+			<!--Collision information of the back_camera-->
+
+
+      			<!--#######  BACK CAMERA RGBD PLUGING  #######-->
+      			<sensor name="oak_camera_back" type="rgbd_camera">
+          			<pose>0 0 0 0 0 0</pose>
+          			<camera>
+            				<horizontal_fov>1.047</horizontal_fov>
+            				<image>
+              					<width>320</width>
+              					<height>240</height>
+            				</image>
+            				<clip>
+              					<near>0.1</near>
+              					<far>100</far>
+            				</clip>
+          			</camera>
+          			<always_on>1</always_on>
+          			<update_rate>15</update_rate>
+          			<visualize>true</visualize>
+          			<topic>oak_camera_back</topic>
+          			<enable_metrics>true</enable_metrics>
+        		</sensor>
+		    </link>
+
+
+
+
+
+
+		    <!--connecting these links together using joints-->
+
+		    <!--#######  FRONT RIGHT WHEEL JOINT  #######-->
+		    <joint name='front_right_wheel_joint' type='revolute'>
+      			<pose relative_to='front_right_wheel_link'>0 0 0 0 0 0</pose>
+      			<parent>chassis</parent>
+      			<child>front_right_wheel_link</child>
+      			<axis>
+        			<xyz>0 1 0</xyz>
+          			<limit>
+            				<lower>-1.79769e+308</lower>
+            				<upper>1.79769e+308</upper>
+          			</limit>
+        			<dynamics>
+          				<spring_reference>0</spring_reference>
+          				<spring_stiffness>0</spring_stiffness>
+        			</dynamics>
+      			</axis>
+    		    </joint>
+
+		    <!--#######  FRONT LEFT WHEEL JOINT  #######-->
+		    <joint name='front_left_wheel_joint' type='revolute'>
+      			<pose relative_to='front_left_wheel_link'>0 0 0 0 0 0</pose>
+      			<parent>chassis</parent>
+      			<child>front_left_wheel_link</child>
+      			<axis>
+        			<xyz>0 1 0</xyz>
+        			<limit>
+     			        	<lower>-1.79769e+308</lower>
+            				<upper>1.79769e+308</upper>
+         	 		</limit>
+        			<dynamics>
+          				<spring_reference>0</spring_reference>
+          				<spring_stiffness>0</spring_stiffness>
+        			</dynamics>
+      			</axis>
+    		    </joint>
+
+		    <!--#######  REAR RIGHT WHEEL JOINT  #######-->
+		    <joint name='rear_right_wheel_joint' type='revolute'>
+		      	<pose relative_to='rear_right_wheel_link'>0 0 0 0 0 0</pose>
+		      	<parent>chassis</parent>
+		      	<child>rear_right_wheel_link</child>
+		      	<axis>
+				<xyz>0 1 0</xyz>
+			 	<limit>
+			    		<lower>-1.79769e+308</lower>
+			    		<upper>1.79769e+308</upper>
+			 	</limit>
+				<dynamics>
+			  		<spring_reference>0</spring_reference>
+			  		<spring_stiffness>0</spring_stiffness>
+				</dynamics>
+		      	</axis>
+		    </joint>
+
+  		    <!--#######  REAR LEFT WHEEL JOINT  #######-->
+  		    <joint name='rear_left_wheel_joint' type='revolute'>
+		      	<pose relative_to='rear_left_wheel_link'>0 0 0 0 0 0</pose>
+		      	<parent>chassis</parent>
+		      	<child>rear_left_wheel_link</child>
+		      	<axis>
+				<xyz>0 1 0</xyz>
+			 	<limit>
+			    		<lower>-1.79769e+308</lower>
+			    		<upper>1.79769e+308</upper>
+			 	</limit>
+				<dynamics>
+					  <spring_reference>0</spring_reference>
+					  <spring_stiffness>0</spring_stiffness>
+				</dynamics>
+		      	</axis>
+		    </joint>
+
+   		    <!--#######  GPS JOINT  #######-->
+  		    <joint name='GPS_joint' type='fixed'>
+		      	<pose relative_to='GPS_link'>0 0 0 0 0 0</pose>
+		      	<parent>chassis</parent>
+		      	<child>GPS_link</child>
+		    </joint>
+
+		    <!--#######  FRONT CAMERA JOINT  #######-->
+  		    <joint name='front_camera_joint' type='fixed'>
+		      	<pose relative_to='front_camera_link'>0 0 0 0 0 0</pose>
+		      	<parent>chassis</parent>
+		      	<child>front_camera_link</child>
+		    </joint>
+
+		    <!--#######  BACK CAMERA JOINT  #######-->
+  		    <joint name='back_camera_joint' type='fixed'>
+		    	<pose relative_to="chassis">-0.611435 0.465156 1.55508 0 0 3.14159</pose>
+		      	<parent>chassis</parent>
+		      	<child>back_camera_link</child>
+		    </joint>
+
+		    <!--#######  KINOVA PLATE JOINT  #######-->
+          <joint name='kinova_plate_joint' type='fixed'>
+            <parent>chassis</parent>
+            <child>kinova_plate_link</child>
+            <pose relative_to='chassis'>0 0 0.6 0 0 0</pose>
+        </joint>
+
+
+		    <!--#######  DIFFERENTIAL-SKID DRIVE PLUGING  #######-->
+		    <!-- DISABLED: ros2_control diff_drive_controller handles wheels -->
+
+       <!-- ==================== KINOVA ARM ==================== -->
+
+    <link name='gen3_base_link'>
+      	<pose relative_to="kinova_plate_link">0 0 0.0078 0 0 -1.57079633</pose> <!--angles are in radian-->
+
+      <inertial>
+        <pose>-0.000648 -0.000166 0.08448700000000001 0 0 0</pose>
+        <mass>1.6970000000000001</mass>
+        <inertia>
+          <ixx>0.0046220000000000002</ixx>
+          <ixy>9.0000000000000002e-06</ixy>
+          <ixz>6.0000000000000002e-05</ixz>
+          <iyy>0.0044949999999999999</iyy>
+          <iyz>9.0000000000000002e-06</iyz>
+          <izz>0.0020790000000000001</izz>
+        </inertia>
+      </inertial>
+      <collision name='gen3_base_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/base_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='gen3_base_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/base_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941175 0.941175 0.941175 1</diffuse>
+          <ambient>0.941175 0.941175 0.941175 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='kinova_arm_joint' type='fixed'>
+      <parent>kinova_plate_link</parent>
+      <child>gen3_base_link</child>
+      <pose>0 0 0.005 0 0 0</pose> <!-- Adjust as needed -->
+    </joint>
+    <joint name='joint_1' type='revolute'>
+      <pose relative_to='gen3_base_link'>0 0 0.15643 3.141585307179587 0 0</pose>
+      <parent>gen3_base_link</parent>
+      <child>shoulder_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>39</effort>
+          <velocity>1.3963000000000001</velocity>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='shoulder_link'>
+      <pose relative_to='joint_1'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-2.3e-05 -0.010364 -0.07335999999999999 0 0 0</pose>
+        <mass>1.377</mass>
+        <inertia>
+          <ixx>0.0045700000000000003</ixx>
+          <ixy>9.9999999999999995e-07</ixy>
+          <ixz>1.9999999999999999e-06</ixz>
+          <iyy>0.0048310000000000002</iyy>
+          <iyz>0.00044799999999999999</iyz>
+          <izz>0.0014090000000000001</izz>
+        </inertia>
+      </inertial>
+      <collision name='shoulder_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/shoulder_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='shoulder_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/shoulder_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941175 0.941175 0.941175 1</diffuse>
+          <ambient>0.941175 0.941175 0.941175 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='joint_2' type='revolute'>
+      <pose relative_to='shoulder_link'>0 0.005375 -0.12838 1.5708 0 0</pose>
+      <parent>shoulder_link</parent>
+      <child>bicep_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-2.2400000000000002</lower>
+          <upper>2.2400000000000002</upper>
+          <effort>39</effort>
+          <velocity>1.3963000000000001</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='bicep_link'>
+      <pose relative_to='joint_2'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>3.5e-05 -0.208207 -0.01889 0 0 0</pose>
+        <mass>1.262</mass>
+        <inertia>
+          <ixx>0.046752000000000002</ixx>
+          <ixy>-9.0000000000000002e-06</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00084999999999999995</iyy>
+          <iyz>-9.7999999999999997e-05</iyz>
+          <izz>0.047188000000000001</izz>
+        </inertia>
+      </inertial>
+      <collision name='bicep_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/bicep_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='bicep_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/bicep_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941175 0.941175 0.941175 1</diffuse>
+          <ambient>0.941175 0.941175 0.941175 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='joint_3' type='revolute'>
+      <pose relative_to='bicep_link'>0 -0.41 0 -3.141585307179587 0 0</pose>
+      <parent>bicep_link</parent>
+      <child>forearm_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-2.5699999999999998</lower>
+          <upper>2.5699999999999998</upper>
+          <effort>39</effort>
+          <velocity>1.3963000000000001</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='forearm_link'>
+      <pose relative_to='joint_3'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>1.8e-05 0.076168 -0.01397 0 0 0</pose>
+        <mass>0.93000000000000005</mass>
+        <inertia>
+          <ixx>0.0082920000000000008</ixx>
+          <ixy>-9.9999999999999995e-07</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00062799999999999998</iyy>
+          <iyz>0.00043199999999999998</iyz>
+          <izz>0.0084639999999999993</izz>
+        </inertia>
+      </inertial>
+      <collision name='forearm_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/forearm_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='forearm_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/forearm_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941175 0.941175 0.941175 1</diffuse>
+          <ambient>0.941175 0.941175 0.941175 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='joint_4' type='revolute'>
+      <pose relative_to='forearm_link'>0 0.20843 -0.006375 1.5708 0 0</pose>
+      <parent>forearm_link</parent>
+      <child>spherical_wrist_1_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>9</effort>
+          <velocity>1.2218</velocity>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='spherical_wrist_1_link'>
+      <pose relative_to='joint_4'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-1e-06 0.008486 -0.06293700000000001 0 0 0</pose>
+        <mass>0.67810000000000004</mass>
+        <inertia>
+          <ixx>0.001645</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0016659999999999999</iyy>
+          <iyz>-0.000234</iyz>
+          <izz>0.00038900000000000002</izz>
+        </inertia>
+      </inertial>
+      <collision name='spherical_wrist_1_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/spherical_wrist_1_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='spherical_wrist_1_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/spherical_wrist_1_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941175 0.941175 0.941175 1</diffuse>
+          <ambient>0.941175 0.941175 0.941175 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='joint_5' type='revolute'>
+      <pose relative_to='spherical_wrist_1_link'>0 -0.00017505 -0.10593 -1.5708 0 0</pose>
+      <parent>spherical_wrist_1_link</parent>
+      <child>spherical_wrist_2_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-2.0899999999999999</lower>
+          <upper>2.0899999999999999</upper>
+          <effort>9</effort>
+          <velocity>1.2218</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='spherical_wrist_2_link'>
+      <pose relative_to='joint_5'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-1e-06 0.046429 -0.008704 0 0 0</pose>
+        <mass>0.67800000000000005</mass>
+        <inertia>
+          <ixx>0.0016850000000000001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00040000000000000002</iyy>
+          <iyz>0.00025500000000000002</iyz>
+          <izz>0.001696</izz>
+        </inertia>
+      </inertial>
+      <collision name='spherical_wrist_2_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/spherical_wrist_2_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='spherical_wrist_2_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/spherical_wrist_2_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941175 0.941175 0.941175 1</diffuse>
+          <ambient>0.941175 0.941175 0.941175 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='joint_6' type='revolute'>
+      <pose relative_to='spherical_wrist_2_link'>0 0.10593 -0.00017505 1.5708 0 0</pose>
+      <parent>spherical_wrist_2_link</parent>
+      <child>bracelet_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>9</effort>
+          <velocity>1.2218</velocity>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='bracelet_link'>
+      <pose relative_to='joint_6'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.0001207872782402527 0.004914091757253359 -0.06631616940635311 0 0 0</pose>
+        <mass>1.16320197</mass>
+        <inertia>
+          <ixx>0.002309584141523473</ixx>
+          <ixy>2.0590888918943291e-06</ixy>
+          <ixz>-2.1308028015926091e-06</ixz>
+          <iyy>0.0021265367740357041</iyy>
+          <iyz>-0.00032545191219946628</iyz>
+          <izz>0.0010405640672625849</izz>
+        </inertia>
+      </inertial>
+      <collision name='bracelet_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/bracelet_with_vision_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='bracelet_link_fixed_joint_lump__robotiq_85_base_link_collision_1'>
+        <pose>0 0 -0.0615250000000001 3.14159265358979 1.099370751683716e-32 3.14159265358979</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/robotiq_base.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='bracelet_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://kortex_description/arms/gen3/6dof/meshes/bracelet_with_vision_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941175 0.941175 0.941175 1</diffuse>
+          <ambient>0.941175 0.941175 0.941175 1</ambient>
+        </material>
+      </visual>
+      <visual name='bracelet_link_fixed_joint_lump__robotiq_85_base_link_visual_1'>
+        <pose>0 0 -0.0615250000000001 3.14159265358979 1.099370751683716e-32 3.14159265358979</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/robotiq_base.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+
+    </link>
+    <joint name='robotiq_85_left_inner_knuckle_joint' type='revolute'>
+      <pose relative_to='bracelet_link'>-0.0127 2.394883277138866e-16 -0.1229450000000001 3.14159265358979 1.099370751683716e-32 3.14159265358979</pose>
+      <parent>bracelet_link</parent>
+      <child>robotiq_85_left_inner_knuckle_link</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='robotiq_85_left_inner_knuckle_link'>
+      <pose relative_to='robotiq_85_left_inner_knuckle_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.01897699 0.00015001 0.02247101 0 0 0</pose>
+        <mass>0.029693764479999999</mass>
+        <inertia>
+          <ixx>9.5713600000000001e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>-3.9342399999999998e-06</ixz>
+          <iyy>8.69056e-06</iyy>
+          <iyz>0</iyz>
+          <izz>8.1914400000000003e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='robotiq_85_left_inner_knuckle_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/left_inner_knuckle.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='robotiq_85_left_inner_knuckle_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/left_inner_knuckle.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='robotiq_85_left_knuckle_joint' type='revolute'>
+      <pose relative_to='bracelet_link'>-0.03060114 2.762764101925549e-16 -0.1164295200000001 3.14159265358979 1.099370751683716e-32 3.14159265358979</pose>
+      <parent>bracelet_link</parent>
+      <child>robotiq_85_left_knuckle_link</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>0</lower>
+          <upper>0.80000000000000004</upper>
+          <effort>50</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='robotiq_85_left_knuckle_link'>
+      <pose relative_to='robotiq_85_left_knuckle_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.02938673935758698 -0.000550523351652724 0.01110696109436298 0 0 0</pose>
+        <mass>0.056451499600000003</mass>
+        <inertia>
+          <ixx>1.672951427632284e-05</ixx>
+          <ixy>2.376180881559496e-07</ixy>
+          <ixz>-5.7573775998137648e-06</ixz>
+          <iyy>2.2123373744517121e-05</iyy>
+          <iyz>1.6103204181075421e-07</iyz>
+          <izz>1.2901330613689229e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='robotiq_85_left_knuckle_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/left_knuckle.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='robotiq_85_left_knuckle_link_fixed_joint_lump__robotiq_85_left_finger_link_collision_1'>
+        <pose>0.03152616 0 -0.00376347 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/left_finger.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='robotiq_85_left_knuckle_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/left_knuckle.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='robotiq_85_left_knuckle_link_fixed_joint_lump__robotiq_85_left_finger_link_visual_1'>
+        <pose>0.03152616 0 -0.00376347 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/left_finger.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='robotiq_85_left_finger_tip_joint' type='revolute'>
+      <pose relative_to='robotiq_85_left_knuckle_link'>0.0371575 0 0.04342168 0 0 0</pose>
+      <parent>robotiq_85_left_knuckle_link</parent>
+      <child>robotiq_85_left_finger_tip_link</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='robotiq_85_left_finger_tip_link'>
+      <pose relative_to='robotiq_85_left_finger_tip_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.01456706 -0.0008 0.01649701 0 0 0</pose>
+        <mass>0.04268588744</mass>
+        <inertia>
+          <ixx>1.0481519999999999e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>3.5232e-06</ixz>
+          <iyy>1.197888e-05</iyy>
+          <iyz>0</iyz>
+          <izz>4.2278399999999998e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='robotiq_85_left_finger_tip_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/left_finger_tip.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='robotiq_85_left_finger_tip_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/left_finger_tip.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='robotiq_85_right_inner_knuckle_joint' type='revolute'>
+      <pose relative_to='bracelet_link'>0.0127 1.574186633327113e-16 -0.1229450000000001 3.14159265358979 1.099370751683716e-32 3.14159265358979</pose>
+      <parent>bracelet_link</parent>
+      <child>robotiq_85_right_inner_knuckle_link</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='robotiq_85_right_inner_knuckle_link'>
+      <pose relative_to='robotiq_85_right_inner_knuckle_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.01926824 5.001e-05 0.02222178 0 0 0</pose>
+        <mass>0.029693764479999999</mass>
+        <inertia>
+          <ixx>9.4245600000000001e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>3.9635999999999996e-06</ixz>
+          <iyy>8.69056e-06</iyy>
+          <iyz>0</iyz>
+          <izz>8.3382400000000003e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='robotiq_85_right_inner_knuckle_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/right_inner_knuckle.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='robotiq_85_right_inner_knuckle_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/right_inner_knuckle.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='robotiq_85_right_knuckle_joint' type='revolute'>
+      <pose relative_to='bracelet_link'>0.03060114 7.852638739874688e-17 -0.1164295200000001 3.14159265358979 1.099370751683716e-32 3.14159265358979</pose>
+      <parent>bracelet_link</parent>
+      <child>robotiq_85_right_knuckle_link</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-0.80000000000000004</lower>
+          <upper>0</upper>
+          <effort>50</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='robotiq_85_right_knuckle_link'>
+      <pose relative_to='robotiq_85_right_knuckle_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.02938673935758698 4.488716153812148e-05 0.01110696109436298 0 0 0</pose>
+        <mass>0.056451499600000003</mass>
+        <inertia>
+          <ixx>1.67196201740057e-05</ixx>
+          <ixy>-4.9109219643319929e-08</ixy>
+          <ixz>5.7573775998137648e-06</ixz>
+          <iyy>2.2123373744517121e-05</iyy>
+          <iyz>3.3280959258061408e-08</iyz>
+          <izz>1.289143651137209e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='robotiq_85_right_knuckle_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/right_knuckle.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='robotiq_85_right_knuckle_link_fixed_joint_lump__robotiq_85_right_finger_link_collision_1'>
+        <pose>-0.03152616 0 -0.00376347 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/right_finger.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='robotiq_85_right_knuckle_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/right_knuckle.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='robotiq_85_right_knuckle_link_fixed_joint_lump__robotiq_85_right_finger_link_visual_1'>
+        <pose>-0.03152616 0 -0.00376347 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/right_finger.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='robotiq_85_right_finger_tip_joint' type='revolute'>
+      <pose relative_to='robotiq_85_right_knuckle_link'>-0.0371575 0 0.04342168 0 0 0</pose>
+      <parent>robotiq_85_right_knuckle_link</parent>
+      <child>robotiq_85_right_finger_tip_link</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-10000000000000000</lower>
+          <upper>10000000000000000</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='robotiq_85_right_finger_tip_link'>
+      <pose relative_to='robotiq_85_right_finger_tip_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.01456706 5e-05 0.01649701 0 0 0</pose>
+        <mass>0.04268588744</mass>
+        <inertia>
+          <ixx>1.0481519999999999e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>-3.5232e-06</ixz>
+          <iyy>1.197888e-05</iyy>
+          <iyz>0</iyz>
+          <izz>4.2278399999999998e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='robotiq_85_right_finger_tip_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/collision/right_finger_tip.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='robotiq_85_right_finger_tip_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://robotiq_description/meshes/visual/right_finger_tip.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+
+    <!-- ===== RealSense D435 sensor on camera_depth_frame ===== -->
+    <link name="realsense_sensor_link">
+      <pose relative_to="camera_depth_frame">0 0 0 0 -1.5708 0</pose>
+      <inertial>
+        <mass>0.001</mass>
+        <inertia><ixx>1e-6</ixx><ixy>0</ixy><ixz>0</ixz>
+                 <iyy>1e-6</iyy><iyz>0</iyz><izz>1e-6</izz></inertia>
+      </inertial>
+      <sensor name="realsense_d435" type="rgbd_camera">
+        <always_on>true</always_on>
+        <update_rate>5</update_rate>
+        <camera name="realsense">
+          <horizontal_fov>1.5009831567151233</horizontal_fov>
+          <image><width>640</width><height>480</height><format>R8G8B8</format></image>
+          <clip><near>0.1</near><far>10.0</far></clip>
+          <noise><type>gaussian</type><mean>0.0</mean><stddev>0.003</stddev></noise>
+        </camera>
+        <topic>realsense</topic>
+        <gz_frame_id>camera_depth_optical_frame</gz_frame_id>
+      </sensor>
+    </link>
+    <joint name="realsense_sensor_joint" type="fixed">
+      <parent>camera_depth_frame</parent>
+      <child>realsense_sensor_link</child>
+    </joint>
+
+
+    <!-- ===== 3D LiDAR (Ouster-like) ===== -->
+    <link name="lidar_link">
+      <pose relative_to="chassis">0 0.56219 0.79244 0 0 0</pose>
+      <inertial>
+        <mass>0.17</mass>
+        <inertia><ixx>1e-4</ixx><ixy>0</ixy><ixz>0</ixz>
+                 <iyy>1e-4</iyy><iyz>0</iyz><izz>1e-4</izz></inertia>
+      </inertial>
+      <visual name="lidar_visual">
+        <geometry><cylinder><radius>0.05</radius><length>0.07</length></cylinder></geometry>
+        <material>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <ambient>0.1 0.1 0.1 1</ambient>
+        </material>
+      </visual>
+      <collision name="lidar_collision">
+        <geometry><cylinder><radius>0.05</radius><length>0.07</length></cylinder></geometry>
+      </collision>
+      <sensor name="lidar" type="gpu_lidar">
+        <always_on>true</always_on>
+        <update_rate>10</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>-1.5708</min_angle>
+              <max_angle>1.5708</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>32</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.3927</min_angle>   <!-- -22.5 deg -->
+              <max_angle>0.3927</max_angle>    <!--  22.5 deg -->
+            </vertical>
+          </scan>
+          <range>
+            <min>1.0</min>
+            <max>12.0</max>
+            <resolution>0.015</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <topic>ouster</topic>
+        <gz_frame_id>lidar_link</gz_frame_id>
+      </sensor>
+    </link>
+    <joint name="lidar_joint" type="fixed">
+      <parent>chassis</parent>
+      <child>lidar_link</child>
+    </joint>
+
+
+
+  <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find-pkg-share gazeboenvs)/config/ros2_controllers_sim.yaml</parameters>
+      <controller_manager_node_name>controller_manager</controller_manager_node_name>
+      <robot_param_node>gz_description_server</robot_param_node>
+      <robot_param>robot_description</robot_param>
+    </plugin>
+    <!-- <plugin name='ignition::gazebo::systems::Sensors' filename='libignition-gazebo-sensors-system.so'>
+      <render_engine>ogre</render_engine>
+    </plugin> -->
+    <frame name='camera_module' attached_to='end_effector_link'>
+      <pose>0 0.05639 -0.00305 -0 0 3.14159</pose>
+    </frame>
+    <frame name='camera_link' attached_to='camera_module'/>
+    <frame name='color_module' attached_to='end_effector_link'>
+      <pose>0 0.05639 -0.00305 -0 0 3.14159</pose>
+    </frame>
+    <frame name='camera_color_frame' attached_to='color_module'/>
+    <frame name='depth_module' attached_to='end_effector_link'>
+      <pose>0.0275 0.066 -0.00305 -0 0 3.14159</pose>
+    </frame>
+    <frame name='camera_depth_frame' attached_to='depth_module'/>
+    <frame name='robotiq_85_base_joint' attached_to='end_effector_link'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='robotiq_85_base_link' attached_to='robotiq_85_base_joint'/>
+    <frame name='robotiq_85_left_finger_joint' attached_to='robotiq_85_left_knuckle_link'>
+      <pose>0.031526 0 -0.003763 0 -0 0</pose>
+    </frame>
+    <frame name='robotiq_85_left_finger_link' attached_to='robotiq_85_left_finger_joint'/>
+    <frame name='robotiq_85_right_finger_joint' attached_to='robotiq_85_right_knuckle_link'>
+      <pose>-0.031526 0 -0.003763 0 -0 0</pose>
+    </frame>
+    <frame name='robotiq_85_right_finger_link' attached_to='robotiq_85_right_finger_joint'/>
+    <frame name='end_effector' attached_to='bracelet_link'>
+      <pose>0 0 -0.061525 3.14159 0 3.14159</pose>
+    </frame>
+    <frame name='end_effector_link' attached_to='end_effector'/>
+
+	</model>
+</sdf>

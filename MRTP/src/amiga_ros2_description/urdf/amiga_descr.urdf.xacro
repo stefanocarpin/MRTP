@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<robot name="amiga_base" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Use LiDAR or not?-->
+  <xacro:arg name="use_lidar" default="false" />
+  <xacro:arg name="gps_link_name" default="gps_link" />
+  <xacro:arg name="use_vectornav" default="false" />
+
+  <!-- Include macros -->
+  <xacro:include filename="$(find amiga_ros2_description)/urdf/base.urdf.xacro" />
+  <xacro:include filename="$(find amiga_ros2_description)/urdf/wheel.urdf.xacro" />
+  <xacro:include filename="$(find amiga_ros2_description)/urdf/gps.urdf.xacro"/>
+  <xacro:include filename="$(find amiga_ros2_description)/urdf/oak_d_w_poe.urdf.xacro"/>
+  <xacro:include filename="$(find amiga_ros2_description)/urdf/vectornav.urdf.xacro"/>
+  <xacro:include filename="$(find amiga_ros2_description)/urdf/bno085.urdf.xacro"/>
+  <xacro:include filename="$(find amiga_ros2_description)/urdf/lidar.urdf.xacro"/>
+
+
+  <!-- Base -->
+  <xacro:base
+    wheel_radius="0.21717"
+    wheel_joint_z_offset_from_base_link="-0.4341"/>
+
+  <!-- Front Right Wheel -->
+  <xacro:wheel
+    wheel_name="front_right_wheel_link"
+    parent_link="base_link"
+    joint_origin_xyz="0.352875765322685 -0.562186930189418 -0.43410291085732"
+    joint_origin_rpy="0 0 0"
+    joint_axis_xyz="0 -1 0"/>
+
+  <!-- Front Left Wheel -->
+  <xacro:wheel
+    wheel_name="front_left_wheel_link"
+    parent_link="base_link"
+    joint_origin_xyz="0.30508 0.56219 -0.4341"
+    joint_origin_rpy="0 0 0"
+    joint_axis_xyz="0 1 0"/>
+
+  <!-- Rear Right Wheel -->
+  <xacro:wheel
+    wheel_name="rear_right_wheel_link"
+    parent_link="base_link"
+    joint_origin_xyz="-0.30507 -0.56219 -0.4341"
+    joint_origin_rpy="0 0 0"
+    joint_axis_xyz="0 -1 0"/>
+
+  <!-- Rear Left Wheel -->
+  <xacro:wheel
+    wheel_name="rear_left_wheel_link"
+    parent_link="base_link"
+    joint_origin_xyz="-0.35312 0.56219 -0.43414"
+    joint_origin_rpy="0 0 0"
+    joint_axis_xyz="0 1 0"/>
+
+  <!-- GPS -->
+  <xacro:gps
+    parent_link="base_link"
+    gps_link_name="$(arg gps_link_name)"
+    joint_origin_xyz="-0.343 0.27301 1.0163"
+    joint_origin_rpy="0 0 0"/>
+
+  <!-- IMU -->
+  <xacro:if value="$(arg use_vectornav)">
+    <xacro:vectornav
+      parent_link="base_link"
+      vectornav_link_name="vectornav"
+      joint_origin_xyz="-0.583 0.27301 1.0663"
+      joint_origin_rpy="${pi} 0 ${pi/2}"/>
+  </xacro:if>
+  <xacro:unless value="$(arg use_vectornav)">
+    <xacro:bno085
+      parent_link="base_link"
+      bno085_link_name="bno085"
+      joint_origin_xyz="-0.3 0 0"
+      joint_origin_rpy="0 0 0"/>
+  </xacro:unless>
+
+  <!-- LiDAR -->
+  <xacro:if value="$(arg use_lidar)">
+    <xacro:lidar
+    parent_link="base_link"
+    lidar_link_name="lidar_link"
+    joint_origin_xyz="0 0.56219 0.14117"
+    joint_origin_rpy="0 0 0"/>
+  </xacro:if>
+
+  <!-- Cameras -->
+  <!-- Front -->
+  <!-- imu_rpy="3.14159265359 1.5708 0" -->
+  <xacro:property name="oak0_offset" value="${62.2 * pi / 180}"/>
+
+  <xacro:oak_d_w_poe
+    camera_name="oak0"
+    parent_link="base_link"
+    mount_origin_xyz="-0.24835 0.27301 0.95145"
+    mount_origin_rpy="${pi} 0.2618 0"
+    imu_rpy="${pi} ${pi/2} 0"/>
+
+  <!-- Back -->
+  <xacro:oak_d_w_poe
+    camera_name="oak1"
+    parent_link="base_link"
+    mount_origin_xyz="-0.43765 0.27301 0.95145"
+    mount_origin_rpy="-${pi} 0.2618 -${pi}"
+    imu_rpy="${pi} ${pi/2} 0"/>
+
+</robot>

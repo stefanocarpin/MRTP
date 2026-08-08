@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="base" params="wheel_radius wheel_joint_z_offset_from_base_link">
+
+    <!-- Calculate vertical offset for base_footprint -->
+    <xacro:property name="vertical_offset" value="${wheel_radius - wheel_joint_z_offset_from_base_link}"/>
+
+    <!-- Base footprint -->
+    <link name="base_footprint"/>
+
+    <!-- Base link -->
+    <link name="base_link"/>
+
+    <!-- Fixed joint from footprint to base_link -->
+    <joint name="base_footprint_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="base_footprint"/>
+      <origin xyz="0 0 -${vertical_offset}" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

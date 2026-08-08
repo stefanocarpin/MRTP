@@ -1,0 +1,56 @@
+newmtl Citrus_aurantium_bark
+Ka 0 0 0
+Ns 1
+Ks 0 0 0
+Kd 0.170759 0.116829 0.0917118
+map_Kd Maps/Citrus_x_aurantium_HD_Citrus_aurantium_bark_Citrus_bark_01_Color.png
+map_Bump Maps/Citrus_x_aurantium_HD_Citrus_aurantium_bark_Citrus_bark_01_Normal.png
+newmtl Citrus_aurant_leaf_01
+Ka 0 0 0
+Ns 8.16617
+Ks 0.0972549 0.0972549 0.0972549
+Kd 0.0662679 0.105853 0.00714168
+map_Kd Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_Color.png
+map_Bump Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_Citrus_X_aurantium_leaf_01_Normal.png
+newmtl Citrus_aurant_leaf_02
+Ka 0 0 0
+Ns 8.16617
+Ks 0.0972549 0.0972549 0.0972549
+Kd 0.0902624 0.135177 0.0105345
+map_Kd Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_02_Color.png
+map_Bump Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_Citrus_X_aurantium_leaf_01_Normal.png
+newmtl Citrus_aurant_leaf_03
+Ka 0 0 0
+Ns 8.16617
+Ks 0.0972549 0.0972549 0.0972549
+Kd 0.117036 0.167375 0.0143467
+map_Kd Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_03_Color.png
+map_Bump Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_Citrus_X_aurantium_leaf_01_Normal.png
+newmtl Citrus_aurant_leaf_04
+Ka 0 0 0
+Ns 8.16617
+Ks 0.0972549 0.0972549 0.0972549
+Kd 0.150017 0.205234 0.0191204
+map_Kd Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_04_Color.png
+map_Bump Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_Citrus_X_aurantium_leaf_01_Normal.png
+newmtl Citrus_aurantium_twig
+Ka 0 0 0
+Ns 1
+Ks 0 0 0
+Kd 0.120966 0.116659 0.0307532
+map_Kd Maps/Citrus_x_aurantium_HD_Citrus_aurantium_twig_Citrus_twig_01_Color.png
+map_Bump Maps/Citrus_x_aurantium_HD_Citrus_aurantium_twig_Citrus_twig_01_Normal.png
+newmtl Citrus_aurant_leaf_01_y1
+Ka 0 0 0
+Ns 8.16617
+Ks 0.0972549 0.0972549 0.0972549
+Kd 0.158205 0.190481 0.000282356
+map_Kd Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_y1_Color.png
+map_Bump Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_Citrus_X_aurantium_leaf_01_Normal.png
+newmtl Citrus_aurant_leaf_01_y2
+Ka 0 0 0
+Ns 8.16617
+Ks 0.0972549 0.0972549 0.0972549
+Kd 0.285539 0.287486 0
+map_Kd Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_y2_Color.png
+map_Bump Maps/Citrus_x_aurantium_HD_Citrus_aurant_leaf_01_Citrus_X_aurantium_leaf_01_Normal.png
