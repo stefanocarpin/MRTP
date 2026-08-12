@@ -41,6 +41,7 @@ from launch.actions import (
     ExecuteProcess,
     OpaqueFunction,
     RegisterEventHandler,
+    SetEnvironmentVariable,
 )
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration
@@ -225,6 +226,14 @@ def launch_setup(context, *args, **kwargs):
 def generate_launch_description():
     pkg_gazeboenvs = get_package_share_directory('gazeboenvs')
 
+    # gz-transport discovery uses UDP multicast on whatever interface GZ_IP
+    # points to. If the environment (e.g. ~/.bashrc) sets GZ_IP to a LAN
+    # address, multicast getting filtered by the network breaks discovery
+    # between gz sim and ros_gz_sim/ros_gz_bridge even though they're on the
+    # same host -- this hangs "create" forever on "Requesting list of world
+    # names.". Force loopback here so the sim doesn't depend on shell state.
+    set_env_vars_gz_ip = SetEnvironmentVariable('GZ_IP', '127.0.0.1')
+
     set_env_vars_resources = AppendEnvironmentVariable(
         'GZ_SIM_RESOURCE_PATH', os.path.join(pkg_gazeboenvs, 'models'))
 
@@ -239,6 +248,7 @@ def generate_launch_description():
         set_env_vars_plugins = None
 
     ld = LaunchDescription(ARGUMENTS)
+    ld.add_action(set_env_vars_gz_ip)
     ld.add_action(set_env_vars_resources)
     if set_env_vars_plugins is not None:
         ld.add_action(set_env_vars_plugins)
