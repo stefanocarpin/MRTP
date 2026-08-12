@@ -27,6 +27,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     OpaqueFunction,
     RegisterEventHandler,
+    SetEnvironmentVariable,
 )
 from launch.conditions import IfCondition
 from launch.event_handlers import OnShutdown, OnProcessExit
@@ -237,6 +238,14 @@ def generate_launch_description():
             OpaqueFunction(function=lambda _: os.remove(world_sdf))
         ]))
 
+    # gz-transport discovery uses UDP multicast on whatever interface GZ_IP
+    # points to. If the environment (e.g. ~/.bashrc) sets GZ_IP to a LAN
+    # address, multicast getting filtered by the network breaks discovery
+    # between gz sim and ros_gz_sim/ros_gz_bridge even though they're on the
+    # same host -- this hangs "create" forever on "Requesting list of world
+    # names.". Force loopback here so the sim doesn't depend on shell state.
+    set_env_vars_gz_ip = SetEnvironmentVariable('GZ_IP', '127.0.0.1')
+
     set_env_vars_resources = AppendEnvironmentVariable(
             'GZ_SIM_RESOURCE_PATH',
             os.path.join(sim_dir, 'worlds'))
@@ -289,6 +298,7 @@ def generate_launch_description():
     ld.add_action(declare_robot_sdf_cmd)
     ld.add_action(declare_use_respawn_cmd)
 
+    ld.add_action(set_env_vars_gz_ip)
     ld.add_action(set_env_vars_resources)
     ld.add_action(world_sdf_xacro)
     ld.add_action(remove_temp_sdf_file)

@@ -23,6 +23,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
+from launch.actions import SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution
 
@@ -58,6 +59,14 @@ def generate_launch_description():
     pkg_clearpath_gz = get_package_share_directory('clearpath_gz')
 
     pkg_gazeboenvs = get_package_share_directory('gazeboenvs')
+
+    # gz-transport discovery uses UDP multicast on whatever interface GZ_IP
+    # points to. If the environment (e.g. ~/.bashrc) sets GZ_IP to a LAN
+    # address, multicast getting filtered by the network breaks discovery
+    # between gz sim and ros_gz_sim/ros_gz_bridge even though they're on the
+    # same host -- this hangs "create" forever on "Requesting list of world
+    # names.". Force loopback here so the sim doesn't depend on shell state.
+    set_env_vars_gz_ip = SetEnvironmentVariable('GZ_IP', '127.0.0.1')
 
     # Paths
     gz_sim_launch = PathJoinSubstitution(
@@ -95,6 +104,7 @@ def generate_launch_description():
     
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
+    ld.add_action(set_env_vars_gz_ip)
     ld.add_action(gz_sim)
     ld.add_action(robot_spawn)
     return ld
