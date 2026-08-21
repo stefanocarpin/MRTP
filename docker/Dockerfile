@@ -1,6 +1,7 @@
 ARG ROS_DISTRO=jazzy
+ARG RELEASE_DATE=2026-06-28
 
-FROM ghcr.io/sloretz/ros:${ROS_DISTRO}-desktop-full AS base
+FROM ghcr.io/sloretz/ros:${ROS_DISTRO}-desktop-full-${RELEASE_DATE} AS base
 
 # any utilities you want
 RUN apt-get update && apt-get install -y git wget python3-full python3-pip vim net-tools netcat-traditional tmux software-properties-common \
@@ -9,6 +10,7 @@ RUN apt-get update && apt-get install -y git wget python3-full python3-pip vim n
     ros-${ROS_DISTRO}-nav2-route ros-${ROS_DISTRO}-topic-tools ros-dev-tools \
     ros-${ROS_DISTRO}-clearpath-desktop ros-${ROS_DISTRO}-clearpath-simulator \
     ros-${ROS_DISTRO}-turtlebot4-simulator ros-${ROS_DISTRO}-irobot-create-nodes \
+    ros-${ROS_DISTRO}-kortex-description \
     python3-vcstool python3-apt
 
 # install python requirements

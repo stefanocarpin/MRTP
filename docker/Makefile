@@ -60,9 +60,12 @@ clean:
 	rm -rf build/ install/ log/
 
 husky:
-	ros2 launch clearpath_gz simulation.launch.py
+	ros2 launch gazeboenvs gazebo_husky.launch.py
 
 turtlebot:
-	ros2 launch turtlebot4_gz_bringup turtlebot4_gz.launch.py
+	ros2 launch gazeboenvs tb4_simulation.launch.py
 
-.PHONY: repo-init shell build-image vnc bash clean husky
+amiga:
+	ros2 launch gazeboenvs amiga_orchard.launch.py
+
+.PHONY: repo-init shell build-image vnc bash clean husky turtlebot amiga
